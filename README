@@ -1,0 +1,37 @@
+This is the TerraRadar
+======================
+
+TerraRadar is a library, based on TerraLib, for processing of Radar Files.
+
+Additionaly, TerraRadar gives to the user an simple application to test the algorithms.
+
+
+Documents to read before:
+-------------------------
+
+BRANCHES  Notes on how to switch to the right branch to work on: 
+          MASTER, DEVELOP, release-0.0.1 or any other branch or tagged release.
+
+BUILD-INSTRUCTIONS  Notes on how to compile and install TerraRadar in some platforms.
+
+CHANGELOG      List of changes
+
+COPYING        Licence statement in plain txt format
+
+COPYING.html   Licence statement in HTML format
+
+Main Directories:
+-----------------
+build       Contains the CMake scripts with commands, macros and functions 
+			used to build the environment for compiling libraries and executables
+			in different platforms using the CMake tool.
+
+doc 		Contains the documentation for the library and applications.
+
+resources   Fonts, images, sql, xml files among other resources of general use.
+
+share		Shared resources.
+               
+src         Contains the source code of TerraRadar.
+
+unittest    Contains some code to test the features.
