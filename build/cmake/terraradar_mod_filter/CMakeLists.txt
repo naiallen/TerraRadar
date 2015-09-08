@@ -13,7 +13,7 @@ include_directories(${TERRALIB_INCLUDE_CONFIG_DIR})
 include_directories(${TERRARADAR_SRC_DIR}/library/filter)
 
 if(WIN32)
-  add_definitions(-DTRFILTDLL)
+  add_definitions(-DTERADARFILTDLL)
 endif()
 
 # Source and Header files

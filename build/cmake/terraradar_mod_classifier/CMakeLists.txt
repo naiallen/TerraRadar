@@ -13,7 +13,7 @@ include_directories(${TERRALIB_INCLUDE_CONFIG_DIR})
 include_directories(${TERRARADAR_SRC_DIR}/library/classifier)
 
 if(WIN32)
-  add_definitions(-DTRCLASSDLL)
+  add_definitions(-DTERADARCLASSDLL)
 endif()
 
 # Source and Header files

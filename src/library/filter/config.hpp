@@ -7,7 +7,7 @@ TerraRadar is under development.
 
 /*!
 \file terraradar/library/filter/config.h
-\brief Configuration flags for TerraRadar Classifier Runtime module.
+\brief Configuration flags for TerraRadar Filter Runtime module.
 */
 
 #ifndef TERRARADAR_LIB_FILT_INTERNAL_CONFIG_HPP_
@@ -37,12 +37,12 @@ remember to insert the TERADARFILTSTATIC flag into the project list of defines.
 #define TERADARFILTEXPORT                      // Don't need to export/import... it is a static
 // library
 #elif TERADARFILTDLL
-#define TERADARFILTDLL  __declspec(dllexport)   // export DLL information
+#define TERADARFILTEXPORT  __declspec(dllexport)   // export DLL information
 #else
-#define TERADARFILTDLL  __declspec(dllimport)   // import DLL information
+#define TERADARFILTEXPORT  __declspec(dllimport)   // import DLL information
 #endif 
 #else
-#define TERADARFILTDLL
+#define TERADARFILTEXPORT
 #endif
 
 //@}

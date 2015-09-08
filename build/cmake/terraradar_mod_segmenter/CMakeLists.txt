@@ -13,7 +13,7 @@ include_directories(${TERRALIB_INCLUDE_CONFIG_DIR})
 include_directories(${TERRARADAR_SRC_DIR}/library/segmenter)
 
 if(WIN32)
-  add_definitions(-DTRSEGMDLL)
+  add_definitions(-DTERADARSEGMDLL)
 endif()
 
 # Source and Header files

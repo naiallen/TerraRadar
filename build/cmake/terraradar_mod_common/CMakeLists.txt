@@ -13,7 +13,7 @@ include_directories(${TERRALIB_INCLUDE_CONFIG_DIR})
 include_directories(${TERRARADAR_SRC_DIR}/library/common)
 
 if(WIN32)
-  add_definitions(-DTRCOMMONDLL)
+  add_definitions(-DTERADARCOMMONDLL)
 endif()
 
 # Source and Header files

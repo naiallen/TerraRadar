@@ -37,12 +37,12 @@ remember to insert the TERADARCLASSSTATIC flag into the project list of defines.
 #define TERADARCLASSEXPORT                      // Don't need to export/import... it is a static
 // library
 #elif TERADARCLASSDLL
-#define TERADARCLASSDLL  __declspec(dllexport)   // export DLL information
+#define TERADARCLASSEXPORT  __declspec(dllexport)   // export DLL information
 #else
-#define TERADARCLASSDLL  __declspec(dllimport)   // import DLL information
+#define TERADARCLASSEXPORT  __declspec(dllimport)   // import DLL information
 #endif 
 #else
-#define TERADARCLASSDLL
+#define TERADARCLASSEXPORT
 #endif
 
 //@}

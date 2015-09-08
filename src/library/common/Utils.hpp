@@ -6,21 +6,21 @@ TerraRadar is under development.
 */
 
 /*!
-\file terraradar/library/common/RadarFunctions.hpp
-\brief Useful functions for radar data manipulation.
+\file terraradar/library/common/Utils.hpp
+\brief Useful functions and procedures.
 */
 
-#ifndef TERRARADAR_LIB_COMMON_INTERNAL_RADARFUNCTIONS_HPP_
-#define TERRARADAR_LIB_COMMON_INTERNAL_RADARFUNRCIONS_HPP_
+#ifndef TERRARADAR_LIB_COMMON_INTERNAL_UTILS_HPP_
+#define TERRARADAR_LIB_COMMON_INTERNAL_UTILS_HPP_
 
 // TerraRadar Includes
 #include "config.hpp"
 
 namespace teradar {
 	namespace common {
-    /*! \brief Simple stub */
-    TERADARCOMMONEXPORT void SampleFunction();
+    /*! \brief Load TerraLib Modules needed */
+    TERADARCOMMONEXPORT void loadTerraLibDrivers();
   }  // end namespace common
 }  // end namespace teradar
 
-#endif  // TERRARADAR_LIB_COMMON_INTERNAL_RADARFUNCTIONS_HPP_
+#endif  // TERRARADAR_LIB_COMMON_INTERNAL_UTILS_HPP_

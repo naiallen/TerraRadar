@@ -37,12 +37,12 @@ remember to insert the TERADARCOMMONSTATIC flag into the project list of defines
 #define TERADARCOMMONEXPORT                      // Don't need to export/import... it is a static
 // library
 #elif TERADARCOMMONDLL
-#define TERADARCOMMONDLL  __declspec(dllexport)   // export DLL information
+#define TERADARCOMMONEXPORT  __declspec(dllexport)   // export DLL information
 #else
-#define TERADARCOMMONDLL  __declspec(dllimport)   // import DLL information
+#define TERADARCOMMONEXPORT  __declspec(dllimport)   // import DLL information
 #endif 
 #else
-#define TERADARCOMMONDLL
+#define TERADARCOMMONEXPORT
 #endif
 
 //@}

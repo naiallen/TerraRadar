@@ -14,7 +14,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 include_directories(${TERRARADAR_SRC_DIR}/library/segmenter
 		    ${TERRARADAR_SRC_DIR}/library/classifier
 		    ${TERRARADAR_SRC_DIR}/library/filter
-                    ${TERRARADAR_SRC_DIR}/library/common
+            ${TERRARADAR_SRC_DIR}/library/common
 )
 
 # Source files
@@ -32,10 +32,10 @@ source_group("Source Files\\filter"  FILES ${TERRARADAR_UNITTEST_FILT_SRCS})
 
 # Setting Dependencies
 set(TERRARADAR_UNITTEST_LIBS_DEPENDENCIES terraradar_mod_common
-				          terraradar_mod_segmenter
-					  terraradar_mod_classifier
-					  terraradar_mod_filter
-					  ${GTEST_BOTH_LIBRARIES}
+				                          terraradar_mod_segmenter
+					                      terraradar_mod_classifier
+					                      terraradar_mod_filter
+					                      ${GTEST_BOTH_LIBRARIES}
 )
 
 add_executable(terraradar_unittest ${TERRARADAR_UNITTEST_COMMON_SRCS} ${TERRARADAR_UNITTEST_SEGM_SRCS} 

@@ -44,7 +44,7 @@ endif()
 
 # Defining the directory where gtest is installed
 if(NOT DEFINED GTEST_ROOT)
-    set(GTEST_ROOT /usr/local/gtest 
+    set(GTEST_ROOT "C:/develop/gtest-1.7.0"
         CACHE PATH "Path to the directory where GTest is installed.")
 endif()
 

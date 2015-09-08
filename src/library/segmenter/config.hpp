@@ -7,7 +7,7 @@ TerraRadar is under development.
 
 /*!
 \file terraradar/library/segmenter/config.h
-\brief Configuration flags for TerraRadar Classifier Runtime module.
+\brief Configuration flags for TerraRadar Segmenter Runtime module.
 */
 
 #ifndef TERRARADAR_LIB_SEGM_INTERNAL_CONFIG_HPP_
@@ -37,12 +37,12 @@ remember to insert the TERADARSEGMSTATIC flag into the project list of defines.
 #define TERADARSEGMEXPORT                      // Don't need to export/import... it is a static
 // library
 #elif TERADARSEGMDLL
-#define TERADARSEGMDLL  __declspec(dllexport)   // export DLL information
+#define TERADARSEGMEXPORT  __declspec(dllexport)   // export DLL information
 #else
-#define TERADARSEGMDLL  __declspec(dllimport)   // import DLL information
+#define TERADARSEGMEXPORT  __declspec(dllimport)   // import DLL information
 #endif 
 #else
-#define TERADARSEGMDLL
+#define TERADARSEGMEXPORT
 #endif
 
 //@}
