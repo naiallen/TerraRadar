@@ -29,6 +29,7 @@ set(TERRARADAR_COMMON_LIB_DEPENDENCIES ${Boost_SYSTEM_LIBRARY}
                                        ${TERRALIB_COMMON_LIBRARY}
                                        ${TERRALIB_PLUGIN_LIBRARY}
                                        ${TERRALIB_RP_LIBRARY}
+                                       ${TERRALIB_RASTER_LIBRARY}
 )
 
 add_library(terraradar_mod_common SHARED ${TERRARADAR_COMMON_SRCS} ${TERRARADAR_COMMON_HDRS})

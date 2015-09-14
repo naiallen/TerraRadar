@@ -34,6 +34,8 @@ set(TERRARADAR_TESTS_DIR ${TERRARADAR_ROOT_DIR}/tests)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/code_style")
 
+add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_VERSION=3 -DBOOST_UBLAS_TYPE_CHECK=0)
+
 #
 # Where terralib project is located
 #
@@ -63,7 +65,7 @@ if(NOT TERRALIB_FOUND)
 endif()
 
 # Boost
-find_package(Boost 1.57 REQUIRED system date_time chrono timer filesystem thread unit_test_framework)
+find_package(Boost 1.57 REQUIRED system date_time chrono timer filesystem thread)
 if(NOT Boost_FOUND)
     message(FATAL_ERROR "Could not find required Boost libraries!")
 endif()
