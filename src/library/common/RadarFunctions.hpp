@@ -49,6 +49,10 @@ namespace teradar {
       VV polarizations.
       In case of size 4, the method assumes that the input data is complete,
       containing the HH, HV, VH and VV polarizations.
+      If the size is 6, the method assumes that the input is an incomplete covariance
+      matrix which order is 3, and create a complete one.
+      If the size is 10, the method assumes that the input is an incomplete covariance
+      matrix which order is 4, and create a complete one.
       The method assumes that the bands from rasters have the same dimension.
       \param inputRasterPointers Input rasters pointers.
       \param inputRasterBands Input raster bands (one band for each input

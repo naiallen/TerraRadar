@@ -84,8 +84,7 @@ namespace teradar {
           intensityBands.push_back( 4 );
           intensityBands.push_back( 8 );
 
-        }
-        else {
+        } else {
           intensityBands.push_back( 0 );
           intensityBands.push_back( 5 );
           intensityBands.push_back( 10 );
@@ -132,6 +131,13 @@ namespace teradar {
       }
 
       size_t outputBands = inputRasterBandsSize * inputRasterBandsSize;
+
+      // @todo - etore - rewrite it
+      if( inputRasterBandsSize == 6 ) {
+        outputBands = 9;
+      } else if( inputRasterBandsSize == 10 ) {
+        outputBands = 16;
+      }
 
       // creating the output raster
       {
@@ -185,10 +191,77 @@ namespace teradar {
       }
 
       // create data for each band
-      {
-        const unsigned int nOutRows = outputRasterPtr->getNumberOfRows();
-        const unsigned int nOutCols = outputRasterPtr->getNumberOfColumns();
+      const unsigned int nOutRows = outputRasterPtr->getNumberOfRows( );
+      const unsigned int nOutCols = outputRasterPtr->getNumberOfColumns( );
 
+      if( inputRasterBandsSize == 6 ) {
+        // INPUT:     OUTPUT: (minus signal means conjugated complex)
+        // 0  1  2     0  1  2
+        //    3  4    -1  3  4
+        //       5    -2 -4  5
+
+        std::vector< std::complex< double > > inputComplex( inputRasterBandsSize );
+
+        // for each pixel (line,column), compute the values
+        for( unsigned int j = 0; j < nOutRows; ++j ) {
+          for( unsigned int k = 0; k < nOutCols; ++k ) {
+            // get the input values
+            for( size_t i = 0; i < inputRasterPointers.size( ); ++i ) {
+              std::complex< double > inputComplexValue;
+              inputRasterPointers[i]->getBand( inputRasterBands[i] )->getValue( k, j, inputComplexValue );
+              inputComplex[i] = inputComplexValue;
+            }
+            
+            outputRasterPtr->getBand( 0 )->setValue( k, j, inputComplex[0] );
+            outputRasterPtr->getBand( 1 )->setValue( k, j, inputComplex[1] );
+            outputRasterPtr->getBand( 2 )->setValue( k, j, inputComplex[2] );
+            outputRasterPtr->getBand( 3 )->setValue( k, j, std::conj( inputComplex[1] ) );
+            outputRasterPtr->getBand( 4 )->setValue( k, j, inputComplex[3] );
+            outputRasterPtr->getBand( 5 )->setValue( k, j, inputComplex[4] );
+            outputRasterPtr->getBand( 6 )->setValue( k, j, std::conj( inputComplex[2] ) );
+            outputRasterPtr->getBand( 7 )->setValue( k, j, std::conj( inputComplex[4] ) );
+            outputRasterPtr->getBand( 8 )->setValue( k, j, inputComplex[5] );
+          }
+        }
+
+      } else if( inputRasterBandsSize == 10 ) {
+        // INPUT:       OUTPUT: (minus signal means conjugated complex)
+        // 0  1  2  3    0  1  2  3
+        //    4  5  6   -1  4  5  6
+        //       7  8   -2 -5  7  8 
+        //          9   -3 -6 -8  9 
+
+        std::vector< std::complex< double > > inputComplex( inputRasterBandsSize );
+
+        // for each pixel (line,column), compute the values
+        for( unsigned int j = 0; j < nOutRows; ++j ) {
+          for( unsigned int k = 0; k < nOutCols; ++k ) {
+            // get the input values
+            for( size_t i = 0; i < inputRasterPointers.size( ); ++i ) {
+              std::complex< double > inputComplexValue;
+              inputRasterPointers[i]->getBand( inputRasterBands[i] )->getValue( k, j, inputComplexValue );
+              inputComplex[i] = inputComplexValue;
+            }
+            outputRasterPtr->getBand( 0 )->setValue( k, j, inputComplex[0] );
+            outputRasterPtr->getBand( 1 )->setValue( k, j, inputComplex[1] );
+            outputRasterPtr->getBand( 2 )->setValue( k, j, inputComplex[2] );
+            outputRasterPtr->getBand( 3 )->setValue( k, j, inputComplex[3] );
+            outputRasterPtr->getBand( 4 )->setValue( k, j, std::conj( inputComplex[1] ));
+            outputRasterPtr->getBand( 5 )->setValue( k, j, inputComplex[4] );
+            outputRasterPtr->getBand( 6 )->setValue( k, j, inputComplex[5] );
+            outputRasterPtr->getBand( 7 )->setValue( k, j, inputComplex[6] );
+            outputRasterPtr->getBand( 8 )->setValue( k, j, std::conj( inputComplex[2] ));
+            outputRasterPtr->getBand( 9 )->setValue( k, j, std::conj( inputComplex[5] ));
+            outputRasterPtr->getBand( 10 )->setValue( k, j, inputComplex[7] );
+            outputRasterPtr->getBand( 11 )->setValue( k, j, inputComplex[8] );
+            outputRasterPtr->getBand( 12 )->setValue( k, j, std::conj( inputComplex[3] ));
+            outputRasterPtr->getBand( 13 )->setValue( k, j, std::conj( inputComplex[6] ));
+            outputRasterPtr->getBand( 14 )->setValue( k, j, std::conj( inputComplex[8] ));
+            outputRasterPtr->getBand( 15 )->setValue( k, j, inputComplex[9] );
+          }
+        }
+
+      } else {
         std::vector< std::complex< double > > inputComplex( inputRasterBandsSize );
         std::vector< std::complex< double > > conjugatedComplex( inputRasterBandsSize );
 
