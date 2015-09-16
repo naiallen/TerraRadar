@@ -32,7 +32,7 @@ set(TERRARADAR_TESTS_DIR ${TERRARADAR_ROOT_DIR}/tests)
 set(TERRARADAR_ABSOLUTE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 
 if(NOT DEFINED TERRARADAR_DATA_DIR)
-  set(TERRARADAR_DATA_DIR "${CMAKE_BINARY_DIR}/data" CACHE PATH "Path to a directory containing the data used in the examples and/or in\
+  set(TERRARADAR_DATA_DIR "${TERRARADAR_ABSOLUTE_ROOT_DIR}/data" CACHE PATH "Path to a directory containing the data used in the examples and/or in\
  the unit test")
 endif()
 
