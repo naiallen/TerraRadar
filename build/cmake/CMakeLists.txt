@@ -28,6 +28,14 @@ set(TERRARADAR_SHARE_DIR ${TERRARADAR_ROOT_DIR}/share)
 set(TERRARADAR_ICONS_DIR ${TERRARADAR_SHARE_DIR}/icons)
 set(TERRARADAR_TESTS_DIR ${TERRARADAR_ROOT_DIR}/tests)
 
+# variables storing absolute paths
+set(TERRARADAR_ABSOLUTE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../..)
+
+if(NOT DEFINED TERRARADAR_DATA_DIR)
+  set(TERRARADAR_DATA_DIR "${CMAKE_BINARY_DIR}/data" CACHE PATH "Path to a directory containing the data used in the examples and/or in\
+ the unit test")
+endif()
+
 #
 # global configurations
 #
@@ -193,6 +201,14 @@ if(TERRARADAR_SOURCE_VERIFY_ENABLED)
         message(FATAL_ERROR "Could not find Python interpreter. It is required to enable the CppLint check.")
     endif()
 endif()
+
+#
+# Process TERRARADAR configuration files
+#
+configure_file(${TERRARADAR_ABSOLUTE_ROOT_DIR}/src/library/BuildConfig.hpp.in
+               ${CMAKE_BINARY_DIR}/terraradar_generated/terraradar_buildconfig.hpp @ONLY)
+
+include_directories(${CMAKE_BINARY_DIR}/terraradar_generated/)
 
 #
 # Build Modules

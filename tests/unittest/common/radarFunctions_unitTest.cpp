@@ -10,10 +10,15 @@ TerraRadar is under development.
 \brief A test suite for the functions that handles Radar data.
 */
 
+// TerraRadar includes
+#include "BuildConfig.hpp"
+
 // Gtest includes
 #include <gtest/gtest.h>
 
 TEST(RadarFunctions, myMocTest)
 {
 	EXPECT_EQ(1000, 1000);
+
+
 }

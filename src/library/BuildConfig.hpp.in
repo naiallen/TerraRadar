@@ -1,0 +1,18 @@
+/*  Copyright (C) 2015 National Institute For Space Research (INPE) - Brazil.
+
+This file is part of the TerraRadar - a library and application for radar data manipulation.
+
+TerraRadar is under development.
+*/
+
+/*!
+\file terraradar/library/BuildConfig.hpp.in
+\brief Configuration flags for TerraRadar Build.
+*/
+
+#ifndef TERRARADAR_LIB_INTERNAL_TERRARADAR_BUILDCONFIG_HPP_
+#define TERRARADAR_LIB_INTERNAL_TERRARADAR_BUILDCONFIG_HPP_
+
+#define TERRARADAR_DATA_DIR "@TERRARADAR_DATA_DIR@"
+
+#endif  // TERRARADAR_LIB_INTERNAL_TERRARADAR_BUILDCONFIG_HPP_
