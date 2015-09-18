@@ -23,12 +23,6 @@ TerraRadar is under development.
 // Gtest includes
 #include <gtest/gtest.h>
 
-TEST( InitMethods, loadTerralib )
-{
-  // load TerraLib and it drivers
-  TerraLib::getInstance().initialize();
-  teradar::common::loadTerraLibDrivers();
-}
 
 TEST( RadarFunctions, createCovarianceTest1 )
 {
@@ -87,6 +81,7 @@ TEST( RadarFunctions, createIntensityTest1 )
   delete inputRaster;
 }
 
+// @todo - etore - fix it when the problem with SRS was fixed in TerraLib
 TEST( EndMethods, finalizeTerralib )
 {
   te::plugin::PluginManager::getInstance().shutdownAll();
