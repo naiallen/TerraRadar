@@ -306,24 +306,43 @@ namespace teradar {
         return false;
       }
 
+      return ComputeCovarianceAndPearsonCorrelation( inputRaster1Ptr, inputRaster1Band, 0, nCols, 0, nRows,
+        inputRaster2Ptr, inputRaster2Band, 0, nCols, 0, nRows, covariance, correlation, enableProgressInterface );
+    }
+
+    bool ComputeCovarianceAndPearsonCorrelation( const te::rst::Raster* raster1Ptr, unsigned int raster1Band,
+      unsigned int raster1XStart, unsigned int raster1XBound, unsigned int raster1YStart, unsigned int raster1YBound,
+      const te::rst::Raster* raster2Ptr, unsigned int raster2Band, unsigned int raster2XStart, unsigned int raster2XBound,
+      unsigned int raster2YStart, unsigned int raster2YBound,
+      double& covariance, double& correlation, const bool enableProgressInterface ) {
+
+      const unsigned int raster1Rows = raster1YBound - raster1YStart;
+      const unsigned int raster1Cols = raster1XBound - raster1XStart;
+
+      const unsigned int raster2Rows = raster2YBound - raster2YStart;
+      const unsigned int raster2Cols = raster2XBound - raster2XStart;
+
+      if(( raster1Cols != raster2Cols ) || ( raster1Rows != raster2Rows )) {
+        return false;
+      }
+
+      std::complex< double > complex1Value;
+      std::complex< double > complex2Value;
+
       std::complex<double> sum1 = 0.;
       std::complex<double> sum2 = 0.;
-      std::complex<double> value1 = 0.;
-      std::complex<double> value2 = 0.;
-      
-      for( unsigned int j = 0; j < nRows; ++j ) {
-        for( unsigned int k = 0; k < nCols; ++k ) {
-          std::complex< double > complexValue1;
-          inputRaster1Ptr->getBand( inputRaster1Band )->getValue( k, j, complexValue1 );
-          sum1 += complexValue1;
 
-          std::complex< double > complexValue2;
-          inputRaster2Ptr->getBand( inputRaster2Band )->getValue( k, j, complexValue2 );
-          sum2 += complexValue2;
+      for( unsigned int l = 0; l < raster1Rows; ++l ) {
+        for( unsigned int c = 0; c < raster1Cols; ++c ) {
+          raster1Ptr->getBand( raster1Band )->getValue( c + raster1XStart, l + raster1YStart, complex1Value );
+          sum1 += complex1Value;
+
+          raster2Ptr->getBand( raster2Band )->getValue( c + raster2XStart, l + raster2YStart, complex2Value );
+          sum2 += complex2Value;
         }
       }
 
-      unsigned int nElements = nRows * nCols;
+      unsigned int nElements = raster1Cols * raster1Rows;
 
       std::complex<double> mean1 = sum1 / (std::complex<double>)nElements;
       std::complex<double> mean2 = sum2 / (std::complex<double>)nElements;
@@ -334,19 +353,17 @@ namespace teradar {
       std::complex<double> diff1 = 0.;
       std::complex<double> diff2 = 0.;
 
-      for( unsigned int j = 0; j < nRows; ++j ) {
-        for( unsigned int k = 0; k < nCols; ++k ) {
-          std::complex< double > complexValue1;
-          inputRaster1Ptr->getBand( inputRaster1Band )->getValue( k, j, complexValue1 );
-          diff1 = complexValue1 - mean1;
-          diff11Sum += std::real(diff1 * diff1);
+      for( unsigned int l = 0; l < raster1Rows; ++l ) {
+        for( unsigned int c = 0; c < raster1Cols; ++c ) {
+          raster1Ptr->getBand( raster1Band )->getValue( c + raster1XStart, l + raster1YStart, complex1Value );
+          diff1 = complex1Value - mean1;
+          diff11Sum += std::real( diff1 * diff1 );
 
-          std::complex< double > complexValue2;
-          inputRaster2Ptr->getBand( inputRaster2Band )->getValue( k, j, complexValue2 );
-          diff2 = complexValue2 - mean2;
-          diff22Sum += std::real(diff2 * diff2);
+          raster2Ptr->getBand( raster2Band )->getValue( c + raster2XStart, l + raster2YStart, complex2Value );
+          diff2 = complex2Value - mean2;
+          diff22Sum += std::real( diff2 * diff2 );
 
-          diff12Sum += std::real(diff1 * diff2);
+          diff12Sum += std::real( diff1 * diff2 );
         }
       }
 

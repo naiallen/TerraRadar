@@ -84,12 +84,38 @@ namespace teradar {
       \param correlation Computed correlation.
       \param enableProgressInterface Enable/disable the use of a progress interface when applicable.
       \return true if OK, false on errors.
-      \note
-
+      \note This method computes the number of rows and columns for each input band, validates it, and computes the values.
     */
     TERADARCOMMONEXPORT bool ComputeCovarianceAndPearsonCorrelation( const te::rst::Raster* inputRaster1Ptr,
       unsigned int inputRaster1Band, const te::rst::Raster* inputRaster2Ptr, unsigned int inputRaster2Band,
       double& covariance, double& correlation, const bool enableProgressInterface = false );
+
+    /*!
+      \brief Given two rasters, two band numbers and its boundaries, computes covariance and Pearson's correlation between them.
+      \param raster1Ptr Pointer to the first raster used in computation.
+      \param raster1Band Band to be used from the first raster.
+      \param raster1XStart Left X coordinate of the raster 1.
+      \param raster1YStart Upper Y coordinate of the raster 1.
+      \param raster1XBound Right X coordinate of the raster 1.
+      \param raster1YBound Lower Y coordinate of the raster 1.
+      \param raster2Ptr Pointer to the second raster used in computation.
+      \param raster2Band Band to be used from the second raster.
+      \param raster2XStart Left X coordinate of the raster 2.
+      \param raster2YStart Upper Y coordinate of the raster 2.
+      \param raster2XBound Right X coordinate of the raster 2.
+      \param raster2YBound Lower Y coordinate of the raster 2.
+      \param covariance Computed covariance.
+      \param correlation Computed correlation.
+      \param enableProgressInterface Enable/disable the use of a progress interface when applicable.
+      \return true if OK, false on errors.
+    */
+    TERADARCOMMONEXPORT bool ComputeCovarianceAndPearsonCorrelation( const te::rst::Raster* raster1Ptr, unsigned int raster1Band,
+      unsigned int raster1XStart, unsigned int raster1XBound, unsigned int raster1YStart, unsigned int raster1YBound, 
+      const te::rst::Raster* raster2Ptr, unsigned int raster2Band, unsigned int raster2XStart, unsigned int raster2XBound, 
+      unsigned int raster2YStart, unsigned int raster2YBound,
+      double& covariance, double& correlation, 
+      const bool enableProgressInterface = false );
+    
   }  // end namespace common
 }  // end namespace teradar
 
