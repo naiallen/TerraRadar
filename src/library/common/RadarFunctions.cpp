@@ -290,5 +290,76 @@ namespace teradar {
 
       return true;
     }
+
+    bool ComputeCovarianceAndPearsonCorrelation( const te::rst::Raster* inputRaster1Ptr,
+      unsigned int inputRaster1Band, const te::rst::Raster* inputRaster2Ptr, unsigned int inputRaster2Band,
+      double& covariance, double& correlation, const bool enableProgressInterface )
+    {
+      const unsigned int nRows = inputRaster1Ptr->getNumberOfRows();
+      const unsigned int nCols = inputRaster2Ptr->getNumberOfColumns();
+
+      if( nRows != inputRaster2Ptr->getNumberOfRows() ) {
+        return false;
+      }
+
+      if( nCols != inputRaster2Ptr->getNumberOfColumns() ) {
+        return false;
+      }
+
+      std::complex<double> sum1 = 0.;
+      std::complex<double> sum2 = 0.;
+      std::complex<double> value1 = 0.;
+      std::complex<double> value2 = 0.;
+      
+      for( unsigned int j = 0; j < nRows; ++j ) {
+        for( unsigned int k = 0; k < nCols; ++k ) {
+          std::complex< double > complexValue1;
+          inputRaster1Ptr->getBand( inputRaster1Band )->getValue( k, j, complexValue1 );
+          sum1 += complexValue1;
+
+          std::complex< double > complexValue2;
+          inputRaster2Ptr->getBand( inputRaster2Band )->getValue( k, j, complexValue2 );
+          sum2 += complexValue2;
+        }
+      }
+
+      unsigned int nElements = nRows * nCols;
+
+      std::complex<double> mean1 = sum1 / (std::complex<double>)nElements;
+      std::complex<double> mean2 = sum2 / (std::complex<double>)nElements;
+
+      double diff11Sum = 0.;
+      double diff22Sum = 0.;
+      double diff12Sum = 0.;
+      std::complex<double> diff1 = 0.;
+      std::complex<double> diff2 = 0.;
+
+      for( unsigned int j = 0; j < nRows; ++j ) {
+        for( unsigned int k = 0; k < nCols; ++k ) {
+          std::complex< double > complexValue1;
+          inputRaster1Ptr->getBand( inputRaster1Band )->getValue( k, j, complexValue1 );
+          diff1 = complexValue1 - mean1;
+          diff11Sum += std::real(diff1 * diff1);
+
+          std::complex< double > complexValue2;
+          inputRaster2Ptr->getBand( inputRaster2Band )->getValue( k, j, complexValue2 );
+          diff2 = complexValue2 - mean2;
+          diff22Sum += std::real(diff2 * diff2);
+
+          diff12Sum += std::real(diff1 * diff2);
+        }
+      }
+
+      double var1 = diff11Sum / (double)(nElements - 1);
+      double var2 = diff22Sum / (double)(nElements - 1);
+
+      double stdDev1 = sqrt( var1 );
+      double stdDev2 = sqrt( var2 );
+
+      covariance = diff12Sum / (double)(nElements - 1);
+      correlation = covariance / (stdDev1 * stdDev2);
+
+      return true;
+    }
   }
 }

@@ -81,6 +81,52 @@ TEST( RadarFunctions, createIntensityTest1 )
   delete inputRaster;
 }
 
+TEST( RadarFunctions, computeCovarianceCorrelationTest1 )
+{
+  // open the input raster
+  std::map<std::string, std::string> inputRasterInfo;
+  inputRasterInfo["URI"] = TERRARADAR_DATA_DIR "/rasters/ref_ImagPol240_0_int.tif";
+  te::rst::Raster* inputRaster( te::rst::RasterFactory::open( inputRasterInfo ) );
+  EXPECT_TRUE( inputRaster != NULL );
+
+  double computedCovariance;
+  double computedCorrelation;
+
+  EXPECT_TRUE( teradar::common::ComputeCovarianceAndPearsonCorrelation( inputRaster, 0, inputRaster, 0,
+    computedCovariance, computedCorrelation ));
+
+  double eps = 1e-6;
+
+  EXPECT_NEAR( computedCovariance, 0., eps );
+  EXPECT_NEAR( computedCorrelation, 1.0, eps );
+
+  // Free memory
+  delete inputRaster;
+}
+
+TEST( RadarFunctions, computeCovarianceCorrelationTest2 )
+{
+  // open the input raster
+  std::map<std::string, std::string> inputRasterInfo;
+  inputRasterInfo["URI"] = TERRARADAR_DATA_DIR "/rasters/ref_ImagPol240_0_cov_L1.tif";
+  te::rst::Raster* inputRaster( te::rst::RasterFactory::open( inputRasterInfo ) );
+  EXPECT_TRUE( inputRaster != NULL );
+
+  double computedCovariance;
+  double computedCorrelation;
+
+  EXPECT_TRUE( teradar::common::ComputeCovarianceAndPearsonCorrelation( inputRaster, 0, inputRaster, 1,
+    computedCovariance, computedCorrelation ) );
+
+  double eps = 1e-8;
+
+  EXPECT_NEAR( computedCovariance, 0.00000320040510322, eps );
+  EXPECT_NEAR( computedCorrelation, 2.4766355446561, eps );
+
+  // Free memory
+  delete inputRaster;
+}
+
 // @todo - etore - fix it when the problem with SRS was fixed in TerraLib
 TEST( EndMethods, finalizeTerralib )
 {

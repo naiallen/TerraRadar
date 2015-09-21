@@ -74,6 +74,22 @@ namespace teradar {
       std::auto_ptr<te::rst::Raster>& outputRasterPtr,
       const bool enableProgressInterface = false );
 
+    /*!
+      \brief Given two rasters and two band numbers, computes covariance and Pearson's correlation between them.
+      \param inputRaster1Ptr Pointer to the first raster used in computation.
+      \param inputRaster2Ptr Pointer to the second raster used in computation.
+      \param inputRaster1Band Band to be used from the first raster.
+      \param inputRaster2Band Band to be used from the second raster.
+      \param covariance Computed covariance.
+      \param correlation Computed correlation.
+      \param enableProgressInterface Enable/disable the use of a progress interface when applicable.
+      \return true if OK, false on errors.
+      \note
+
+    */
+    TERADARCOMMONEXPORT bool ComputeCovarianceAndPearsonCorrelation( const te::rst::Raster* inputRaster1Ptr,
+      unsigned int inputRaster1Band, const te::rst::Raster* inputRaster2Ptr, unsigned int inputRaster2Band,
+      double& covariance, double& correlation, const bool enableProgressInterface = false );
   }  // end namespace common
 }  // end namespace teradar
 
