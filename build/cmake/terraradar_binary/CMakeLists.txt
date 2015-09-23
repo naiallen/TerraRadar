@@ -17,6 +17,11 @@ include_directories(${TERRARADAR_SRC_DIR}/library/common
 )
 
 file(GLOB TERRARADAR_EXEC_SRCS ${TERRARADAR_SRC_DIR}/binary/*.cpp)
+file(GLOB TERRARADAR_EXEC_HDRS ${TERRARADAR_SRC_DIR}/binary/*.hpp)
+
+# Creating source groups for IDEs
+source_group("Source Files"  FILES ${TERRARADAR_EXEC_SRCS})
+source_group("Header Files"  FILES ${TERRARADAR_EXEC_HDRS})
 
 # Setting Dependencies
 set(TERRARADAR_EXEC_DEPENDENCIES terraradar_mod_common
@@ -26,7 +31,7 @@ set(TERRARADAR_EXEC_DEPENDENCIES terraradar_mod_common
                                  # ${Boost_SYSTEM_LIBRARY}
 )
 
-add_executable(terraradar ${TERRARADAR_EXEC_SRCS})
+add_executable(terraradar ${TERRARADAR_EXEC_HDRS} ${TERRARADAR_EXEC_SRCS})
 
 target_link_libraries(terraradar ${TERRARADAR_EXEC_DEPENDENCIES})
 
