@@ -9,3 +9,10 @@ TerraRadar is under development.
 \file terraradar/binary/main.cpp
 \brief TerraRadar Binary main module.
 */
+
+int main( int argc, char** argv )
+{
+
+
+  return 0;
+}

@@ -31,10 +31,10 @@ set(TERRARADAR_TESTS_DIR ${TERRARADAR_ROOT_DIR}/tests)
 # variables storing absolute paths
 set(TERRARADAR_ABSOLUTE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 
-if(NOT DEFINED TERRARADAR_DATA_DIR)
+IF(NOT DEFINED TERRARADAR_DATA_DIR)
   set(TERRARADAR_DATA_DIR "${TERRARADAR_ABSOLUTE_ROOT_DIR}/data" CACHE PATH "Path to a directory containing the data used in the examples and/or in\
  the unit test")
-endif()
+ENDIF()
 
 #
 # global configurations
@@ -42,21 +42,29 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/code_style")
 
-add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_VERSION=3 -DBOOST_UBLAS_TYPE_CHECK=0)
-
 #
 # Where terralib project is located
 #
 IF(NOT DEFINED TERRALIB_DIR)
-    set(TERRALIB_DIR "C:/terralib/codebase"
-       	CACHE PATH "Path to the directory where TerraLib 5 is installed.")
-endif()
+    IF(WIN32)
+        SET(TERRALIB_DIR "C:/terralib/codebase"
+       		CACHE PATH "Path to the directory where TerraLib 5 is installed.")
+    ELSE()
+        SET(TERRALIB_DIR "/usr/local/terralib/codebase"
+       		CACHE PATH "Path to the directory where TerraLib 5 is installed.")
+    ENDIF()
+ENDIF()
 
 # Defining the directory where gtest is installed
-if(NOT DEFINED GTEST_ROOT)
-    set(GTEST_ROOT "C:/develop/gtest-1.7.0"
-        CACHE PATH "Path to the directory where GTest is installed.")
-endif()
+IF(NOT DEFINED GTEST_ROOT)
+    IF(WIN32)
+        SET(GTEST_ROOT "C:/develop/gtest-1.7.0"
+            CACHE PATH "Path to the directory where GTest is installed.")
+    ELSE()
+        SET(GTEST_ROOT "/usr/local/gtest"
+            CACHE PATH "Path to the directory where GTest is installed.")
+    ENDIF()
+ENDIF()
 
 #
 # including CMake's auxiliary files
@@ -84,21 +92,11 @@ if(NOT GTest_FOUND)
     message(WARNING "Could not find required Google Test libraries!")
 endif()
 
-# Doxygen
-find_package(Doxygen QUIET)
-if(NOT DOXYGEN_FOUND)
-    message(WARNING "Could not find required Doxygen libraries!")
-endif()
-
 #
 # Build options (what is built)
 #
 # Warning: please, do not change the order below!
 #
-if(DOXYGEN_FOUND)
-  option(TERRARADAR_DOXYGEN_ENABLED  "Enable source code documentation build?" ON)
-endif()
-
 option(TERRARADAR_MOD_COMMON_ENABLED "Build Common functions module?" ON)
 
 option(TERRARADAR_MOD_SEGMENTER_ENABLED "Build Segmenter functions module?" ON)
@@ -106,6 +104,9 @@ option(TERRARADAR_MOD_SEGMENTER_ENABLED "Build Segmenter functions module?" ON)
 option(TERRARADAR_MOD_CLASSIFIER_ENABLED "Build Classifier functions module?" ON)
 
 option(TERRARADAR_MOD_FILTER_ENABLED "Build Filter functions module?" ON)
+
+# Doxygen
+option(TERRARADAR_DOXYGEN_ENABLED  "Enable source code documentation build?" OFF)
 
 # Application bin
 cmake_dependent_option(TERRARADAR_BIN_ENABLED "Build TerraRadar Application?" ON
@@ -172,21 +173,23 @@ endif()
 #
 # global definitions and includes
 #
+add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_VERSION=3 -DBOOST_UBLAS_TYPE_CHECK=0)
+
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 endif()
 
 if(WIN32)
-	if(MINGW)
-		add_definitions(-DTE_MINGW -D_WIN32_WINNT=0x601 -fpermissive)
-	endif()
+    if(MINGW)
+        add_definitions(-DTE_MINGW -D_WIN32_WINNT=0x601 -fpermissive)
+    endif()
 elseif(APPLE)
-	add_definitions(-ftemplate-depth-1024)
+    add_definitions(-ftemplate-depth-1024)
 endif()
 
 # Turn on multi process compilation
 if(MSVC)
-  add_definitions(/MP)
+    add_definitions(/MP)
 endif()
 
 #
@@ -240,12 +243,12 @@ if(TERRARADAR_MOD_FILTER_ENABLED)
 endif()
 
 # TerraRadar Binary
-if(TERRARADAR_BIN_EXECUTABLE)
+if(TERRARADAR_BIN_ENABLED)
     message("    -> TerraRadar Binary enabled")
-    add_subdirectory(terraradar_bin)
+    add_subdirectory(terraradar_binary)
 endif()
 
-# API Documentation generation with Doxygen
+# Doxygen
 if(TERRARADAR_DOXYGEN_ENABLED)
     message("    -> Doxygen Documentation enabled")
     find_package(Doxygen REQUIRED)
@@ -261,7 +264,7 @@ endif()
 # Build Tests
 #
 if(TERRARADAR_UNITTEST_ENABLED)
-    message("    -> Unit Tests enabled")
+    message("    -> Unit Tests enabled!")
 
     if(GTEST_FOUND)
         add_subdirectory(terraradar_unittest)
