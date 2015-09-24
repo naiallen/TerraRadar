@@ -92,6 +92,50 @@ if(NOT GTest_FOUND)
     message(WARNING "Could not find required Google Test libraries!")
 endif()
 
+# Qt
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+
+find_package(Qt5Widgets)
+if(Qt5Widgets_FOUND)
+	message("Found Qt5 Widgets libraries!")
+    include_directories(${Qt5Widgets_INCLUDE_DIRS})
+    add_definitions(${Qt5Widgets_DEFINITIONS})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+else()
+	message(FATAL_ERROR "Could not find required Qt Widgets libraries!")
+endif()
+
+find_package(Qt5Core)
+if(Qt5Core_FOUND)
+	message("Found Qt5 Core libraries!")
+    include_directories(${Qt5Core_INCLUDE_DIRS})
+    add_definitions(${Qt5Core_DEFINITIONS})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Core_EXECUTABLE_COMPILE_FLAGS}")
+else()
+	message(FATAL_ERROR "Could not find required Qt Core libraries!")
+endif()
+
+find_package(Qt5Gui)
+if(Qt5Gui_FOUND)
+	message("Found Qt5 Gui libraries!")
+    include_directories(${Qt5Gui_INCLUDE_DIRS})
+    add_definitions(${Qt5Gui_DEFINITIONS})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Gui_EXECUTABLE_COMPILE_FLAGS}")
+else()
+	message(FATAL_ERROR "Could not find required Qt Gui libraries!")
+endif()
+
+if(NOT QT_QCOLLECTIONGENERATOR_EXECUTABLE)
+  find_program(QT_QCOLLECTIONGENERATOR_EXECUTABLE
+               NAME qcollectiongenerator
+               PATHS /usr
+                     /usr/local
+                     ${Qt5_DIR}/../../..
+               PATH_SUFFIXES bin)
+endif()
+
 #
 # Build options (what is built)
 #

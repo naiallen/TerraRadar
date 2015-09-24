@@ -28,12 +28,26 @@ set(TERRARADAR_EXEC_DEPENDENCIES terraradar_mod_common
 				 terraradar_mod_segmenter
 				 terraradar_mod_classifier
 				 terraradar_mod_filter
-                                 # ${Boost_SYSTEM_LIBRARY}
 )
+
+# Setting Dependencies
+set(TERRARADAR_EXEC_LIB_DEPENDENCIES ${Boost_SYSTEM_LIBRARY}
+                                     ${TERRALIB_COMMON_LIBRARY}
+                                     ${TERRALIB_PLUGIN_LIBRARY}
+                                     ${TERRALIB_RP_LIBRARY}
+                                     ${TERRALIB_RASTER_LIBRARY}
+                                     ${TERRALIB_QT_WIDGETS_LIBRARY}
+                                     ${TERRALIB_QT_APF_LIBRARY}
+)
+
+set(TERRARADAR_EXEC_QT_DEPENDENCIES Qt5::Widgets Qt5::Gui Qt5::Core)
 
 add_executable(terraradar ${TERRARADAR_EXEC_HDRS} ${TERRARADAR_EXEC_SRCS})
 
-target_link_libraries(terraradar ${TERRARADAR_EXEC_DEPENDENCIES})
+target_link_libraries(terraradar ${TERRARADAR_EXEC_DEPENDENCIES} 
+	                             ${TERRARADAR_EXEC_QT_DEPENDENCIES}
+	                             ${TERRADADAR_EXEC_LIB_DEPENDENCIES}
+	                             ${QT_LIBRARIES})
 
 if(TERRARADAR_SOURCE_VERIFY_ENABLED)
     add_style_check_target(terraradar "${TERRARADAR_EXEC_SRCS}")
