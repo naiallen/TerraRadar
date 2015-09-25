@@ -30,6 +30,52 @@ namespace teradar {
     TERADARCOMMONEXPORT
       bool CopyComplex2DiskRaster( const te::rst::Raster& inputRaster,
         const std::string& fileName );
+
+    /*!
+      \brief Convert to string.
+      \param t What to convert.
+      \return Converted string.
+    */
+    template<class T>
+    std::string toString( const T& t ) {
+      std::ostringstream ss;
+      ss << t;
+      return ss.str();
+    }
+
+    /*!
+      \brief Convert to string.
+      \param t What to convert.
+      \param s Converted string.
+    */
+    template<class T>
+    void toString( const T& t, const std::string& s ) {
+      t = toString<T>( s );
+    }
+
+    /*!
+      \brief Convert from string.
+      \param s String to be converted.
+      \return Converted value.
+    */
+    template<class T>
+    T fromString( const std::string& s ) {
+      std::istringstream ss( s );
+      T t = T( ); // set only to avoid valgrind error message
+      ss >> t;
+      return t;
+    }
+
+    /*!
+      \brief Convert from string.
+      \param t Converted value.
+      \param s String to be converted.
+    */
+    template<class T>
+    void fromString( T& t, const std::string& s ) {
+      t = fromString<T>( s );
+    }
+
   }  // end namespace common
 }  // end namespace teradar
 
