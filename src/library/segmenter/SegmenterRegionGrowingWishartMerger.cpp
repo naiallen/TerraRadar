@@ -38,8 +38,8 @@ namespace teradar {
       te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const segment2Ptr,
       te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > * const mergePreviewSegPtr ) const
     {
-      assert( segment1Ptr );
-      assert( segment1Ptr->m_features );
+        assert( segment1Ptr );
+        assert( segment1Ptr->m_features );
         assert( segment2Ptr );
         assert( segment2Ptr->m_features );
         assert( mergePreviewSegPtr );
@@ -174,9 +174,9 @@ namespace teradar {
         m_getDissimilarity_dissValue = seg1Prob + w2 * (seg2Prob - seg1Prob);
 
         return m_getDissimilarity_dissValue;
-      }
+    }
 
-      void SegmenterRegionGrowingWishartMerger::mergeFeatures( te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > * const segment1Ptr,
+    void SegmenterRegionGrowingWishartMerger::mergeFeatures( te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > * const segment1Ptr,
       te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const segment2Ptr,
       te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const mergePreviewSegPtr ) const
     {
