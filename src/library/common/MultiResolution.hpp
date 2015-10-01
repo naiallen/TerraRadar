@@ -32,6 +32,15 @@ namespace teradar {
     {
       public:
         /*!
+          \brief Given the number of @a lines and @a columns, computes the max
+          compression level.
+          \param lines Number of lines.
+          \param columns Number of columns.
+          \return The max compression level.        
+        */
+        static unsigned int computeMaxCompressionLevel( unsigned int lines, unsigned int columns );
+
+        /*!
           \brief Constructor.
           \param inputRaster Input raster.
           \param levels Number of levels to be created in the multi resolution,

@@ -18,6 +18,13 @@ namespace teradar {
     /*
      * MultiResolution
      */
+    unsigned int MultiResolution::computeMaxCompressionLevel( unsigned int lines, unsigned int columns ) {
+      unsigned int minDimension = lines < columns ? lines : columns;
+      unsigned int maxLevel = (unsigned int)round( log10( minDimension ) / log10(2) );
+    
+      return maxLevel;
+    }
+    
     MultiResolution::MultiResolution( const te::rst::Raster& inputRaster, size_t levels, const bool enableProgressInterface )
       : m_enableProgress( enableProgressInterface ) {
       m_levels.resize( levels + 1 );

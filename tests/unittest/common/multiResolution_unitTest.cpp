@@ -174,4 +174,11 @@ TEST( MultiResolution, createTest )
   delete inputRaster;
 }
 
-
+TEST( MultiResolution, computeMaxCompressionLevelTests )
+{
+  EXPECT_EQ( teradar::common::MultiResolution::computeMaxCompressionLevel( 440, 480 ), 9 );
+  EXPECT_EQ( teradar::common::MultiResolution::computeMaxCompressionLevel( 240, 320 ), 8 );
+  EXPECT_EQ( teradar::common::MultiResolution::computeMaxCompressionLevel( 4250, 5923 ), 12 );
+  EXPECT_EQ( teradar::common::MultiResolution::computeMaxCompressionLevel( 4250, 8 ), 3 );
+  EXPECT_EQ( teradar::common::MultiResolution::computeMaxCompressionLevel( 2, 4 ), 1 );
+}
