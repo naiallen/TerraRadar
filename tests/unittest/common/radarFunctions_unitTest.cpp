@@ -173,6 +173,27 @@ TEST( RadarFunctions, computeCovarianceCorrelationTest4 )
   delete inputRaster;
 }
 
+TEST( RadarFunctions, computeMinCompressionLevelTests )
+{
+  EXPECT_EQ( teradar::common::ComputeMinCompressionLevel( 8, 1., 4.5 ), 3 );
+  EXPECT_EQ( teradar::common::ComputeMinCompressionLevel( 8, 2., 2.2 ), 1 );
+}
+
+TEST( RadarFunctions, computeMinCompLevelENL )
+{
+  std::pair<unsigned int, double>
+    p1 = teradar::common::ComputeMinCompLevelENL( teradar::common::ScatteringVectorT, 3, 8, 1. );
+
+  EXPECT_EQ( p1.first, 3 );
+  EXPECT_EQ( p1.second, 4.55 );
+
+  std::pair<unsigned int, double>
+    p2 = teradar::common::ComputeMinCompLevelENL( teradar::common::CovarianceMatrixT, 16, 8, 1. );
+
+  EXPECT_EQ( p2.first, 3 );
+  EXPECT_EQ( p2.second, 7.65 );
+}
+
 // @todo - etore - fix it when the problem with SRS was fixed in TerraLib
 TEST( EndMethods, finalizeTerralib )
 {

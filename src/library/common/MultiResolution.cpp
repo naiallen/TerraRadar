@@ -25,24 +25,6 @@ namespace teradar {
       return maxLevel;
     }
     
-    unsigned int MultiResolution::computeMinCompressionLevel( unsigned int maxLevel, const double& imageENL,
-      const double& minENL, const double& autoCorrelation1, const double& autoCorrelation2,
-      const double& autoCorrelation3 ) {
-      unsigned int minLevel = 0;
-      double levelENL = 0;
-
-      while( (levelENL < minENL) && (minLevel != maxLevel) ) {
-        minLevel++;
-
-        double p1 = pow( imageENL * 2, 2 * minLevel );
-        double p2 = 1 - (1 / pow( 2, minLevel ));
-
-        levelENL = p1 / (1 + 2 * p2 * (autoCorrelation1 + autoCorrelation2 + (autoCorrelation3*p2)));
-      }
-
-      return minLevel;
-    }
-    
     MultiResolution::MultiResolution( const te::rst::Raster& inputRaster, size_t levels, const bool enableProgressInterface )
       : m_enableProgress( enableProgressInterface ) {
       m_levels.resize( levels + 1 );

@@ -41,20 +41,6 @@ namespace teradar {
         static unsigned int computeMaxCompressionLevel( unsigned int lines, unsigned int columns );
         
         /*!
-          \brief This method computes the minimal compression level needed to allow the data being 
-          submitted in the Segmentation Process.
-          \param maxLevel Max compression level.
-          \param imageENL Equivalent Number of Looks of the image without compression.
-          \param minENL Minimum ENL according to the number of bands being processed.
-          \param autoCorrelation1 First element of autoCorrelation vector. Default is 0.8.
-          \param autoCorrelation2 Second element of autoCorrelation vector. Default is 0.8.
-          \param autoCorrelation3 Third element of autoCorrelation vector. Default is 0.8.
-        */
-        static unsigned int computeMinCompressionLevel( unsigned int maxLevel, const double& imageENL,
-          const double& minENL, const double& autoCorrelation1 = 0.8, 
-          const double& autoCorrelation2 = 0.8, const double& autoCorrelation3 = 0.8 );
-        
-        /*!
           \brief Constructor.
           \param inputRaster Input raster.
           \param levels Number of levels to be created in the multi resolution,

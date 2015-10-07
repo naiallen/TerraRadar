@@ -378,5 +378,102 @@ namespace teradar {
 
       return true;
     }
+
+    unsigned int ComputeMinCompressionLevel( unsigned int maxLevel, const double& imageENL,
+      const double& minENL, const double& autoCorrelation1, const double& autoCorrelation2,
+      const double& autoCorrelation3 ) {
+      unsigned int minLevel = 0;
+      double levelENL = 0;
+
+      while( (levelENL < minENL) && (minLevel != maxLevel) ) {
+        minLevel++;
+
+        double p1 = pow( imageENL * 2, 2 * minLevel );
+        double p2 = 1 - (1 / pow( 2, minLevel ));
+
+        levelENL = p1 / (1 + 2 * p2 * (autoCorrelation1 + autoCorrelation2 + (autoCorrelation3*p2)));
+      }
+
+      return minLevel;
+    }
+
+    std::pair<unsigned int, double> ComputeMinCompLevelENL( const teradar::common::RadarDataType& dataType,
+      unsigned int numberOfBands, unsigned int maxLevel, const double& imageENL ) {
+      double minENL = 0.;
+      unsigned int minLevel = 0;
+      
+      if( dataType == ScatteringVectorT ) {
+        if( numberOfBands == 1 ) {
+          minENL = 1.0;
+          minLevel = 0;
+        }
+        
+        // @todo - etore - Ok. I know that it sounds weird, but the original code has it. Must verify why.
+        // if( numberOfBands > 1 && numberOfBands <= 4 ) {
+        if( numberOfBands >= 1 && numberOfBands <= 4 ) {
+          switch( numberOfBands ) {
+          case 1:
+            minENL = 1.1;
+            break;
+          case 2:
+            minENL = 2.2;
+            break;
+          case 3:
+            minENL = 4.55;
+            break;
+          case 4:
+            minENL = 7.65;
+            break;
+          default:
+            // @todo - etore - log and throw
+            break;
+          }
+
+          // If the minENL is bigger than the input's image ENL, compute the compression number to allow 
+          // the hypothesis tests
+          if( imageENL <= minENL ) {
+            minLevel = ComputeMinCompressionLevel( maxLevel, imageENL, minENL );
+          }          
+        }
+        
+      } else if( dataType == CovarianceMatrixT ) {
+        // This test assumes that the covariance matrix contains all bands (the conjugated too)
+        // @todo - etore - verify if we should use only incomplete matrices, for performance purposes
+        // 1:1 / 4:3 / 9:6 / 16:10
+
+        if( numberOfBands == 1 ) {
+          minENL = 1.0;
+          minLevel = 0;
+        } else if( numberOfBands > 1 && numberOfBands <= 16 ) {
+          switch( numberOfBands ) {
+          case 4:
+            minENL = 2.2;
+            break;
+          case 9:
+            minENL = 4.55;
+            break;
+          case 16:
+            minENL = 7.65;
+            break;
+          default:
+            // @todo - etore - log and throw
+            break;
+          }
+
+          // If the minENL is bigger than the input's image ENL, compute the compression number to allow 
+          // the hypothesis tests
+          if( imageENL <= minENL ) {
+            minLevel = ComputeMinCompressionLevel( maxLevel, imageENL, minENL );
+          }
+
+        } else {
+          // @todo - etore - log and throw
+        }
+      } else {
+        // @todo - etore - log and throw
+      }
+
+      return std::pair<unsigned int, double>( minLevel, minENL );
+    }
   }
 }

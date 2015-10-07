@@ -183,9 +183,3 @@ TEST( MultiResolution, computeMaxCompressionLevelTests )
   EXPECT_EQ( teradar::common::MultiResolution::computeMaxCompressionLevel( 2, 4 ), 1 );
 }
 
-
-TEST( MultiResolution, computeMinCompressionLevelTests )
-{
-  EXPECT_EQ( teradar::common::MultiResolution::computeMinCompressionLevel( 8, 1., 4.5 ), 3 );
-  EXPECT_EQ( teradar::common::MultiResolution::computeMinCompressionLevel( 8, 2., 2.2 ), 1 );  
-}

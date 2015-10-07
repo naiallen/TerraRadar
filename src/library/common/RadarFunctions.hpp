@@ -22,6 +22,16 @@ TerraRadar is under development.
 namespace teradar {
 	namespace common {
     /*!
+      \enum Radar Data Types.
+    */
+    enum RadarDataType {
+      ScatteringVectorT = 0, //< Scattering vector.
+      CovarianceMatrixT = 1, //< Covariance Matrix.
+      IntensityT = 2, //< Intensity.
+      AmplitudeT = 3 //< Amplitude.
+    };
+
+    /*!
       \brief Create a one band raster representing the intensity matrix.
       The input raster must be a covariance matrix raster, containing (n ^ 2) bands.
       Actualy, supported values of n is 3 and 4.
@@ -115,6 +125,32 @@ namespace teradar {
       unsigned int raster2YStart, unsigned int raster2YBound,
       double& covariance, double& correlation, 
       const bool enableProgressInterface = false );
+
+    /*!
+      \brief This method computes the minimal compression level needed to allow the data being
+      submitted in the Segmentation Process.
+      \param maxLevel Max compression level.
+      \param imageENL Equivalent Number of Looks of the image without compression.
+      \param minENL Minimum ENL according to the number of bands being processed.
+      \param autoCorrelation1 First element of autoCorrelation vector. Default is 0.8.
+      \param autoCorrelation2 Second element of autoCorrelation vector. Default is 0.8.
+      \param autoCorrelation3 Third element of autoCorrelation vector. Default is 0.8.
+    */
+    TERADARCOMMONEXPORT unsigned int ComputeMinCompressionLevel( unsigned int maxLevel, const double& imageENL,
+      const double& minENL, const double& autoCorrelation1 = 0.8,
+      const double& autoCorrelation2 = 0.8, const double& autoCorrelation3 = 0.8 );
+
+    /*
+      \brief 
+      \param dataType Type of Radar Data.
+      \param numberOfBands Number of input bands used in the computation.
+      \param maxLevel Max compression level.
+      \param imageENL Equivalent Number of Looks of the image without compression.
+      \return A pair containing the minimal level of compression and the Equivalent Number of Looks.  
+    */
+    TERADARCOMMONEXPORT std::pair<unsigned int, double> 
+      ComputeMinCompLevelENL( const teradar::common::RadarDataType& dataType,
+      unsigned int numberOfBands, unsigned int maxLevel, const double& imageENL );
     
   }  // end namespace common
 }  // end namespace teradar
