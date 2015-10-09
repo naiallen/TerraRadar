@@ -18,6 +18,14 @@ TerraRadar is under development.
 
 namespace teradar {
 	namespace common {
+    /*!
+      \enum PixelConnectivity type.
+    */
+    enum PixelConnectivityType {
+      VonNeumannNT = 0, //< Von Neumann type - 4 connected.
+      MooreNT = 1, //< Moore type - 8 connected.
+    };
+
     /*! \brief Load TerraLib Modules needed */
     TERADARCOMMONEXPORT void loadTerraLibDrivers();
   }  // end namespace common
