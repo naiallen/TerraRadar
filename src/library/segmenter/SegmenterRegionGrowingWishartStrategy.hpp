@@ -8,7 +8,7 @@ TerraRadar is under development.
 /*!
   \file terraradar/library/segmenter/SegmenterRegionGrowingWishartStrategy.h
   \brief Raster region growing segmenter Wishart strategy.
-  */
+*/
 
 #ifndef TERRARADAR_LIB_SEGM_INTERNAL_SEGMENTERREGIONGROWINGWISHARTSTRATEGY_HPP_
 #define TERRARADAR_LIB_SEGM_INTERNAL_SEGMENTERREGIONGROWINGWISHARTSTRATEGY_HPP_
