@@ -59,6 +59,15 @@ find_library(TERRALIB_RP_LIBRARY
    PATH_SUFFIXES lib
 )
 
+# Find Memory Processing Module library - - tries to find *.a,*.so,*.dylib in paths hard-coded by the script
+find_library(TERRALIB_MEMORY_LIBRARY
+   NAMES terralib_mod_memory
+   PATHS ${TERRALIB_DIR}
+         ${TERRALIB_DIR}/build-files/Release
+         ${TERRALIB_DIR}/build-makefile/bin
+   PATH_SUFFIXES lib
+)
+
 # Find Qt Widgets Module library - - tries to find *.a,*.so,*.dylib in paths hard-coded by the script
 find_library(TERRALIB_QT_WIDGETS_LIBRARY
    NAMES terralib_mod_qt_widgets
@@ -115,6 +124,12 @@ else()
 	message("   Could not find Raster Processing Module library")
 endif()
 
+if(TERRALIB_MEMORY_LIBRARY)
+	message("   Found Memory Module library: ${TERRALIB_MEMORY_LIBRARY}")
+else()
+	message("   Could not find Memory Module library")
+endif()
+
 if(TERRALIB_QT_WIDGETS_LIBRARY)
   message("   Found Qt Widgets Module library: ${TERRALIB_QT_WIDGETS_LIBRARY}")
 else()
@@ -129,13 +144,13 @@ endif()
 
 # Export include and library path for linking with other libraries
 if(TERRALIB_INCLUDE_DIR AND TERRALIB_INCLUDE_CONFIG_DIR AND TERRALIB_COMMON_LIBRARY AND 
-	TERRALIB_PLUGIN_LIBRARY AND TERRALIB_RASTER_LIBRARY AND TERRALIB_RP_LIBRARY AND TERRALIB_QT_APF_LIBRARY
-  AND TERRALIB_QT_WIDGETS_LIBRARY)
+	TERRALIB_PLUGIN_LIBRARY AND TERRALIB_RASTER_LIBRARY AND TERRALIB_RP_LIBRARY AND TERRALIB_MEMORY_LIBRARY
+	AND TERRALIB_QT_APF_LIBRARY AND TERRALIB_QT_WIDGETS_LIBRARY)
 	set(TERRALIB_FOUND TRUE)
 else()
 	set(TERRALIB_FOUND FALSE)
 endif()
 
 mark_as_advanced( TERRALIB_INCLUDE_DIR  TERRALIB_INCLUDE_CONFIG_DIR  TERRALIB_COMMON_LIBRARY  
-				  TERRALIB_PLUGIN_LIBRARY  TERRALIB_RASTER_LIBRARY  TERRALIB_RP_LIBRARY  TERRALIB_QT_APF_LIBRARY
-          TERRALIB_QT_WIDGETS_LIBRARY)
+				  TERRALIB_PLUGIN_LIBRARY  TERRALIB_RASTER_LIBRARY  TERRALIB_RP_LIBRARY  TERRALIB_MEMORY_LIBRARY 
+				  TERRALIB_QT_APF_LIBRARY TERRALIB_QT_WIDGETS_LIBRARY)

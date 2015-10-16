@@ -27,10 +27,12 @@ source_group("Header Files"  FILES ${TERRARADAR_SEGM_HDRS})
 # Setting Dependencies
 set(TERRARADAR_SEGM_LIB_DEPENDENCIES #terraradar_mod_segmenter
                                  ${Boost_SYSTEM_LIBRARY}
+								 ${Boost_THREAD_LIBRARY}
 								 ${Boost_FILESYSTEM_LIBRARY}
                                  ${TERRALIB_RASTER_LIBRARY}
                                  ${TERRALIB_COMMON_LIBRARY}
                                  ${TERRALIB_RP_LIBRARY}
+								 ${TERRALIB_MEMORY_LIBRARY}
 )
 
 add_library(terraradar_mod_segmenter SHARED ${TERRARADAR_SEGM_SRCS} ${TERRARADAR_SEGM_HDRS})
