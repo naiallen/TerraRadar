@@ -29,6 +29,8 @@ TerraRadar is under development.
 
 namespace teradar {
   namespace segmenter {
+    typedef std::complex<double> WishartFeatureType;
+
     /*!
       \class SegmenterRegionGrowingWishartStrategy
       \brief Raster region growing segmenter strategy.
@@ -149,7 +151,7 @@ namespace teradar {
           const te::rp::SegmenterSegmentsBlock& block2ProcessInfo,
           const te::rst::Raster& inputRaster,
           const std::vector< unsigned int >& inputRasterBands,
-          te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >** actSegsListHeadPtr );
+          te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >** actSegsListHeadPtr );
          
         /*!
           \brief true if this instance is initialized.
@@ -169,7 +171,7 @@ namespace teradar {
         /*!
           \brief A pool of segments that can be reused on each strategy execution.
          */
-        te::rp::SegmenterRegionGrowingSegmentsPool< te::rp::rg::WishartFeatureType > m_segmentsPool;
+        te::rp::SegmenterRegionGrowingSegmentsPool< WishartFeatureType > m_segmentsPool;
 
         /*!
           \brief A internal segments IDs matrix that can be reused  on each strategy execution.

@@ -15,13 +15,11 @@ TerraRadar is under development.
 
 #include <terralib/common/progress/TaskProgress.h>
 
-/*
 namespace
 {
   static teradar::segmenter::SegmenterRegionGrowingWishartStrategyFactory
     segmenterRegionGrowingWishartStrategyFactoryInstance;
 }
-*/
 
 namespace teradar {
   namespace segmenter {
@@ -108,7 +106,7 @@ namespace teradar {
 
         SegmenterRegionGrowingWishartStrategy::Parameters const* paramsPtr =
           dynamic_cast<SegmenterRegionGrowingWishartStrategy::Parameters const*>(strategyParams);
-
+        
         if( paramsPtr ) {
           m_parameters = *(paramsPtr);
 
@@ -138,7 +136,7 @@ namespace teradar {
 
           TERP_TRUE_OR_RETURN_FALSE( m_parameters.m_regionMergingLimit > 0,
             "Invalid segmenter strategy parameter m_regionMergingLimit" );
-          
+
           /*
           TERP_TRUE_OR_RETURN_FALSE( m_parameters.m_segmentsSimilarityThreshold >= 0.0 ,
             "Invalid segmenter strategy parameter m_segmentsSimilarityThreshold" )
@@ -175,37 +173,63 @@ namespace teradar {
       {
         TERP_TRUE_OR_RETURN_FALSE( m_isInitialized, "Instance not initialized" );
 
-        unsigned int featuresNumber = (unsigned int)inputRasterBands.size( );
+        unsigned int featuresNumber = (unsigned int)inputRasterBands.size();
 
         // Creating the merger instance
         std::auto_ptr< SegmenterRegionGrowingWishartMerger >
           mergerPtr( new SegmenterRegionGrowingWishartMerger( featuresNumber, m_parameters.m_enlLZero ) );
 
         // Initiating the segments pool
-        const unsigned int segmentFeaturesSize = mergerPtr->getSegmentFeaturesSize( );
-
-        // The number of segments plus 3 (due 3 auxiliary segments)
-        TERP_TRUE_OR_RETURN_FALSE( m_segmentsPool.initialize( 3 + (block2ProcessInfo.m_height * block2ProcessInfo.m_width),
+        const unsigned int segmentFeaturesSize = mergerPtr->getSegmentFeaturesSize();
+        
+        // The number of segments plus 3 (due 3 auxiliary segments
+        TERP_TRUE_OR_RETURN_FALSE( m_segmentsPool.initialize( 3 + (
+          block2ProcessInfo.m_height * block2ProcessInfo.m_width),
           segmentFeaturesSize ), "Segments pool initiation error" );
 
-        te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* auxSeg1Ptr = m_segmentsPool.getNextSegment( );
-        auxSeg1Ptr->disable( );
-        te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* auxSeg2Ptr = m_segmentsPool.getNextSegment( );
-        auxSeg2Ptr->disable( );
-        te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* auxSeg3Ptr = m_segmentsPool.getNextSegment( );
-        auxSeg3Ptr->disable( );
+        //       {
+        //         // checking alignment        
+        //         SegmenterRegionGrowingSegment* auxSegPtr = 0;
+        //         unsigned int counter = 0;
+        //         while( auxSegPtr = m_segmentsPool.getNextSegment() )
+        //         {
+        //           for( unsigned int featureIdx = 0 ; featureIdx < auxSegPtr->m_featuresSize ;
+        //             ++featureIdx )
+        //           {
+        //             auxSegPtr->m_features[ featureIdx ] = (SegmenterRegionGrowingSegment::FeatureType)
+        //             counter;
+        //           }
+        //         }
+        //         m_segmentsPool.resetUseCounter();
+        //         counter = 0;
+        //         while( auxSegPtr = m_segmentsPool.getNextSegment() )
+        //         {
+        //           for( unsigned int featureIdx = 0 ; featureIdx < auxSegPtr->m_featuresSize ;
+        //             ++featureIdx )
+        //           {          
+        //             if( auxSegPtr->m_features[ featureIdx ] != (SegmenterRegionGrowingSegment::FeatureType)
+        //               counter ) throw;
+        //           }
+        //         }        
+        //       }
+
+        te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* auxSeg1Ptr = m_segmentsPool.getNextSegment();
+        auxSeg1Ptr->disable();
+        te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* auxSeg2Ptr = m_segmentsPool.getNextSegment();
+        auxSeg2Ptr->disable();
+        te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* auxSeg3Ptr = m_segmentsPool.getNextSegment();
+        auxSeg3Ptr->disable();
 
         // Allocating the ids matrix
-
-        if( (m_segmentsIdsMatrix.getLinesNumber( ) != block2ProcessInfo.m_height) ||
-          (m_segmentsIdsMatrix.getColumnsNumber( ) != block2ProcessInfo.m_width) ) {
+        if(( m_segmentsIdsMatrix.getLinesNumber() != block2ProcessInfo.m_height ) ||
+           ( m_segmentsIdsMatrix.getColumnsNumber() != block2ProcessInfo.m_width )) {
           TERP_TRUE_OR_RETURN_FALSE( m_segmentsIdsMatrix.reset( block2ProcessInfo.m_height, block2ProcessInfo.m_width,
             te::rp::Matrix< te::rp::SegmenterSegmentsBlock::SegmentIdDataType >::RAMMemPol ),
             "Error allocating segments Ids matrix" );
         }
 
         // Initializing segments
-        te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* actSegsListHeadPtr = 0;
+        te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* actSegsListHeadPtr = 0;
 
         TERP_TRUE_OR_RETURN_FALSE( initializeSegments( segmenterIdsManager,
           block2ProcessInfo, inputRaster, inputRasterBands, &actSegsListHeadPtr ),
@@ -214,22 +238,56 @@ namespace teradar {
         TERP_TRUE_OR_RETURN_FALSE( actSegsListHeadPtr != 0, "Invalid active segments list header" );
 
 
-        // @todo - etore - complete
         // Progress interface
-        /*
         std::auto_ptr< te::common::TaskProgress > progressPtr;
-        if( enableProgressInterface ) {
+        if( enableProgressInterface )
+        {
           progressPtr.reset( new te::common::TaskProgress );
+          // @todo - etore - complete
+          /*
           progressPtr->setTotalSteps( 2 + m_parameters.m_segmentsSimIncreaseSteps );
+          */
           progressPtr->setMessage( "Segmentation" );
         }
-        */
+        
+        //////////////////////////////////////////////////////////
+        // At this point, we have the covariance matrix
+
+        //////////////////////////////////////////////////////////
+
+        if( enableProgressInterface ) {
+          if( !progressPtr->isActive() ) {
+            return false;
+          }
+          progressPtr->pulse();
+        }
+        
+        // Flush result to the output raster
+        {
+          unsigned int blkCol = 0;
+          te::rp::SegmenterSegmentsBlock::SegmentIdDataType* segmentsIdsLinePtr = 0;
+
+          for( unsigned int blkLine = 0; blkLine < block2ProcessInfo.m_height; ++blkLine ) {
+            segmentsIdsLinePtr = m_segmentsIdsMatrix[blkLine];
+
+            for( blkCol = 0; blkCol < block2ProcessInfo.m_width; ++blkCol ) {
+              if( segmentsIdsLinePtr[blkCol] ) {
+                outputRaster.setValue( blkCol + block2ProcessInfo.m_startX, blkLine
+                  + block2ProcessInfo.m_startY, segmentsIdsLinePtr[blkCol],
+                  outputRasterBand );
+              }
+            }
+          }
+        }
+        
+        return true;
 
 
 
 
 
 
+        
         /* 
         
         // Globals
@@ -237,7 +295,7 @@ namespace teradar {
         te::rp::DissimilarityTypeT maxFoundDissimilarity = 0.0;
         
         unsigned int totalMergesNumber = 0;
-        te::rp::rg::IterationCounterType globalMergeIterationsCounter = 1;
+        IterationCounterType globalMergeIterationsCounter = 1;
 
         // STEP 1 - Merge of segments that are equal
         if( enableProgressInterface ) {
@@ -250,7 +308,7 @@ namespace teradar {
         //TERP_LOGMSG( m_parameters.m_segmentsSimilarityThreshold );
         //TERP_LOGMSG( rg::getActiveSegmentsNumber< rg::WishartFeatureType >( actSegsListHeadPtr ) );
         
-        te::rp::rg::mergeSegments< te::rp::rg::WishartFeatureType >(
+        mergeSegments< WishartFeatureType >(
           m_segmentsIdsMatrix,
           0.0,
           0,
@@ -281,7 +339,7 @@ namespace teradar {
           //TERP_LOGMSG( segmentsSimIncreaseStep );
           //TERP_LOGMSG( disimilarityThreshold )
 
-          te::rp::rg::mergeSegments< te::rp::rg::WishartFeatureType >(
+          mergeSegments< WishartFeatureType >(
             m_segmentsIdsMatrix,
             disimilarityThreshold,
             0,
@@ -310,9 +368,9 @@ namespace teradar {
         
         // STEP 3 - Forcing the merge of too small segments
         if( m_parameters.m_minSegmentSize > 1 ) {
-          te::rp::rg::mergeSegments< te::rp::rg::WishartFeatureType >(
+          mergeSegments< WishartFeatureType >(
             m_segmentsIdsMatrix,
-            std::numeric_limits< te::rp::DissimilarityTypeT >::max( ),
+            std::numeric_limits< te::rp::DissimilarityTypeT >::max(),
             m_parameters.m_minSegmentSize,
             segmenterIdsManager,
             *mergerPtr,
@@ -330,32 +388,7 @@ namespace teradar {
           //TERP_LOGMSG( rg::getActiveSegmentsNumber< rg::WishartFeatureType >( actSegsListHeadPtr ) );
         }
 
-        if( enableProgressInterface ) {
-          if( !progressPtr->isActive() ) {
-            return false;
-          }
-          progressPtr->pulse();
-        }
-
-        // Flush result to the output raster
-        {
-          unsigned int blkCol = 0;
-          te::rp::SegmenterSegmentsBlock::SegmentIdDataType* segmentsIdsLinePtr = 0;
-
-          for( unsigned int blkLine = 0; blkLine < block2ProcessInfo.m_height; ++blkLine ) {
-            segmentsIdsLinePtr = m_segmentsIdsMatrix[blkLine];
-
-            for( blkCol = 0; blkCol < block2ProcessInfo.m_width; ++blkCol ) {
-              if( segmentsIdsLinePtr[blkCol] ) {
-                outputRaster.setValue( blkCol + block2ProcessInfo.m_startX, 
-                  blkLine + block2ProcessInfo.m_startY, segmentsIdsLinePtr[blkCol],
-                  outputRasterBand );
-              }
-            }
-          }
-        }
-        */        
-        return true;
+        */
       }
 
       double SegmenterRegionGrowingWishartStrategy::getMemUsageEstimation(
@@ -367,10 +400,10 @@ namespace teradar {
         TERP_TRUE_OR_THROW( m_isInitialized, "Instance not initialized" );
 
         // The features matrix inside the pool
-        double featuresSizeBytes = (double)(pixelsNumber * bandsToProcess * sizeof(te::rp::rg::WishartFeatureType));
+        double featuresSizeBytes = (double)(pixelsNumber * bandsToProcess * sizeof(WishartFeatureType));
 
-        return (double)(featuresSizeBytes + (pixelsNumber * (sizeof(te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >)
-          + (6 * sizeof(te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >*))))
+        return (double)(featuresSizeBytes + (pixelsNumber * (sizeof(te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >)
+          + (6 * sizeof(te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >*))))
           + (pixelsNumber * sizeof(te::rp::SegmenterSegmentsBlock::SegmentIdDataType)));
       }
 
@@ -394,7 +427,7 @@ namespace teradar {
         const te::rp::SegmenterSegmentsBlock& block2ProcessInfo,
         const te::rst::Raster& inputRaster,
         const std::vector< unsigned int >& inputRasterBands,
-        te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >** actSegsListHeadPtr )
+        te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >** actSegsListHeadPtr )
       {
         const unsigned int inputRasterBandsSize = (unsigned int)inputRasterBands.size();
 
@@ -403,8 +436,8 @@ namespace teradar {
         // Initializing each segment
         unsigned int blkLine = 0;
         unsigned int blkCol = 0;
-        te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* segmentPtr = 0;
-        te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* neighborSegmentPtr = 0;
+        te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* segmentPtr = 0;
+        te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* neighborSegmentPtr = 0;
         bool rasterValuesAreValid = true;
         unsigned int inputRasterBandsIdx = 0;
         std::complex< double > value = 0;
@@ -416,15 +449,15 @@ namespace teradar {
         std::vector< te::rp::SegmenterSegmentsBlock::SegmentIdDataType > lineSegmentIds;
         lineSegmentIds.reserve( block2ProcessInfo.m_width );
 
-        std::vector< te::rp::rg::WishartFeatureType > rasterValues;
+        std::vector< WishartFeatureType > rasterValues;
         rasterValues.resize( inputRasterBandsSize, 0 );
 
-        std::vector< te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* > usedSegPointers1( block2ProcessInfo.m_width, 0 );
-        std::vector< te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* > usedSegPointers2( block2ProcessInfo.m_width, 0 );
-        std::vector< te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* >* lastLineSegsPtrs = &usedSegPointers1;
-        std::vector< te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* >* currLineSegsPtrs = &usedSegPointers2;
+        std::vector< te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* > usedSegPointers1( block2ProcessInfo.m_width, 0 );
+        std::vector< te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* > usedSegPointers2( block2ProcessInfo.m_width, 0 );
+        std::vector< te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* >* lastLineSegsPtrs = &usedSegPointers1;
+        std::vector< te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* >* currLineSegsPtrs = &usedSegPointers2;
 
-        te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* prevActSegPtr = 0;
+        te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* prevActSegPtr = 0;
 
         unsigned int rasterValuesIdx = 0;
 
@@ -432,7 +465,6 @@ namespace teradar {
           segmenterIdsManager.getNewIDs( block2ProcessInfo.m_width, lineSegmentIds );
           
           for( blkCol = 0; blkCol < block2ProcessInfo.m_width; ++blkCol )  {
-
             if( (blkLine >= block2ProcessInfo.m_topCutOffProfile[blkCol])
               && (blkLine <= block2ProcessInfo.m_bottomCutOffProfile[blkCol])
               && (blkCol >= block2ProcessInfo.m_leftCutOffProfile[blkLine])
@@ -446,7 +478,7 @@ namespace teradar {
                   value,
                   inputRasterBands[inputRasterBandsIdx] );
 
-                rasterValues[inputRasterBandsIdx] = (te::rp::rg::WishartFeatureType) value;
+                rasterValues[inputRasterBandsIdx] = (WishartFeatureType) value;
               }
             } else {
               rasterValuesAreValid = false;
@@ -530,6 +562,16 @@ namespace teradar {
           }
         }
 
+        /* @todo - etore - remove 
+        std::cout << " M Lines : " << m_segmentsPool.getSegsMatrix().getLinesNumber() << std::endl;
+        std::cout << " M Cols : " << m_segmentsPool.getSegsMatrix( ).getColumnsNumber( ) << std::endl;
+
+        for( blkLine = 0; blkLine < m_segmentsPool.getSegsMatrix().getLinesNumber(); ++blkLine ) {
+          for( blkCol = 0; blkCol < m_segmentsPool.getSegsMatrix().getColumnsNumber(); ++blkCol )  {
+            std::cout << "M L: " << blkLine << " | C: " << blkCol  << " : " <<  m_segmentsPool.getSegsMatrix()[blkLine][blkCol].m_neighborSegmentsSize << std::endl;
+          }
+        }
+        */
         return true;
       }
       

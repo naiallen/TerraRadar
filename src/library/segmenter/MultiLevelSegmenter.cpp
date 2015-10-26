@@ -189,8 +189,6 @@ namespace teradar {
     bool MultiLevelSegmenter::execute( te::rp::AlgorithmOutputParameters& outputParams )
       throw(te::rp::Exception)
     {
-      ////////////////////////////////////
-      // @todo - etore - change this
       if( m_instanceInitialized )
       {
         // creating the output raster
@@ -203,7 +201,7 @@ namespace teradar {
           std::vector< te::rst::BandProperty* > bandsProperties;
           bandsProperties.push_back( new te::rst::BandProperty(
             *(m_inputParameters.m_inputRasterPtr->getBand(
-            m_inputParameters.m_inputRasterBands[0] )->getProperty( )) ) );
+            m_inputParameters.m_inputRasterBands[0] )->getProperty()) ) );
           bandsProperties[0]->m_colorInterp = te::rst::GrayIdxCInt;
           bandsProperties[0]->m_noDataValue = 0;
           bandsProperties[0]->m_type = te::dt::UINT32_TYPE;
@@ -211,20 +209,20 @@ namespace teradar {
           outputParamsPtr->m_outputRasterPtr.reset(
             te::rst::RasterFactory::make(
             outputParamsPtr->m_rType,
-            new te::rst::Grid( *(m_inputParameters.m_inputRasterPtr->getGrid( )) ),
+            new te::rst::Grid( *(m_inputParameters.m_inputRasterPtr->getGrid()) ),
             bandsProperties,
             outputParamsPtr->m_rInfo,
             0,
             0 ) );
-          TERP_TRUE_OR_RETURN_FALSE( outputParamsPtr->m_outputRasterPtr.get( ),
+          TERP_TRUE_OR_RETURN_FALSE( outputParamsPtr->m_outputRasterPtr.get(),
             "Output raster creation error" );
 
           // Fill with zeroes
 
           te::rst::Raster& outRaster = (*outputParamsPtr->m_outputRasterPtr);
           te::rst::Band& outBand = (*outRaster.getBand( 0 ));
-          const unsigned int nRows = outRaster.getNumberOfRows( );
-          const unsigned int nCols = outRaster.getNumberOfColumns( );
+          const unsigned int nRows = outRaster.getNumberOfRows();
+          const unsigned int nCols = outRaster.getNumberOfColumns();
           unsigned int row = 0;
           unsigned int col = 0;
 
@@ -236,36 +234,33 @@ namespace teradar {
             }
           }
         }
-
+        
         // instantiating the segmentation strategy
-
         std::auto_ptr< te::rp::SegmenterStrategy > strategyPtr(
           te::rp::SegmenterStrategyFactory::make( m_inputParameters.m_strategyName ) );
-        TERP_TRUE_OR_RETURN_FALSE( strategyPtr.get( ),
-          "Unable to create an segmentation strategy" );
-        TERP_TRUE_OR_RETURN_FALSE( strategyPtr->initialize(
-          m_inputParameters.getSegStrategyParams( ) ),
+        TERP_TRUE_OR_RETURN_FALSE( strategyPtr.get(), "Unable to create an segmentation strategy" );
+        TERP_TRUE_OR_RETURN_FALSE( strategyPtr->initialize( m_inputParameters.getSegStrategyParams() ),
           "Unable to initialize the segmentation strategy" );
 
         const double stratMemUsageEstimation = strategyPtr->getMemUsageEstimation(
-          m_inputParameters.m_inputRasterBands.size( ),
-          m_inputParameters.m_inputRasterPtr->getNumberOfRows( ) *
-          m_inputParameters.m_inputRasterPtr->getNumberOfColumns( ) );
+          m_inputParameters.m_inputRasterBands.size(),
+          m_inputParameters.m_inputRasterPtr->getNumberOfRows() *
+          m_inputParameters.m_inputRasterPtr->getNumberOfColumns() );
         TERP_DEBUG_TRUE_OR_THROW( stratMemUsageEstimation > 0.0,
           "Invalid strategy memory usage factorMemUsageFactor" );
 
         // Guessing memory limits
 
         const unsigned int totalRasterPixels =
-          m_inputParameters.m_inputRasterPtr->getNumberOfRows( ) *
-          m_inputParameters.m_inputRasterPtr->getNumberOfColumns( );
+          m_inputParameters.m_inputRasterPtr->getNumberOfRows() *
+          m_inputParameters.m_inputRasterPtr->getNumberOfColumns();
         //        const double originalRasterDataMemUsageEstimation = (double)(
         //          totalRasterPixels *
         //          ((unsigned int)m_inputParameters.m_inputRasterBands.size()) *
         //          ( (unsigned int)te::rst::GetPixelSize( m_inputParameters.m_inputRasterPtr->getBandDataType( 0 ) ) ) );          
-        const double totalPhysMem = (double)te::common::GetTotalPhysicalMemory( );
-        const double usedVMem = (double)te::common::GetUsedVirtualMemory( );
-        const double totalVMem = ((double)te::common::GetTotalVirtualMemory( ));
+        const double totalPhysMem = (double)te::common::GetTotalPhysicalMemory();
+        const double usedVMem = (double)te::common::GetUsedVirtualMemory();
+        const double totalVMem = ((double)te::common::GetTotalVirtualMemory());
         const double freeVMem = MIN( totalPhysMem, (totalVMem - usedVMem) );
         const double pixelRequiredRam = stratMemUsageEstimation / ((double)totalRasterPixels);
         const double maxSimultaneousMemoryPixels = std::min( ((double)totalRasterPixels),
@@ -280,22 +275,22 @@ namespace teradar {
         {
           cachedRasterHandler.reset( new te::mem::CachedRaster(
             *m_inputParameters.m_inputRasterPtr, 40, 0 ) );
-          cachedRasterPtr = cachedRasterHandler.get( );
+          cachedRasterPtr = cachedRasterHandler.get();
         }
 
         // Finding the input raster normalization parameters
 
         std::vector< std::complex< double > > inputRasterBandMinValues(
-          m_inputParameters.m_inputRasterBands.size( ), 0.0 );
+          m_inputParameters.m_inputRasterBands.size(), 0.0 );
         std::vector< std::complex< double > > inputRasterBandMaxValues(
-          m_inputParameters.m_inputRasterBands.size( ), 0.0 );
+          m_inputParameters.m_inputRasterBands.size(), 0.0 );
 
-        if( strategyPtr->shouldComputeMinMaxValues( ) )
+        if( strategyPtr->shouldComputeMinMaxValues() )
         {
           const unsigned int nRows =
-            cachedRasterPtr->getNumberOfRows( );
+            cachedRasterPtr->getNumberOfRows();
           const unsigned int nCols =
-            cachedRasterPtr->getNumberOfColumns( );
+            cachedRasterPtr->getNumberOfColumns();
           unsigned int row = 0;
           unsigned int col = 0;
           double bandMin = DBL_MAX;
@@ -303,15 +298,15 @@ namespace teradar {
           double value = 0;
 
           std::vector< std::complex< double > > noDataValues;
-          if( m_inputParameters.m_inputRasterNoDataValues.empty( ) )
+          if( m_inputParameters.m_inputRasterNoDataValues.empty() )
           {
             for( unsigned int inputRasterBandsIdx = 0; inputRasterBandsIdx <
-              m_inputParameters.m_inputRasterBands.size( ); ++inputRasterBandsIdx )
+              m_inputParameters.m_inputRasterBands.size(); ++inputRasterBandsIdx )
             {
               noDataValues.push_back(
                 m_inputParameters.m_inputRasterPtr->getBand(
                 m_inputParameters.m_inputRasterBands[
-                  inputRasterBandsIdx] )->getProperty( )->m_noDataValue );
+                  inputRasterBandsIdx] )->getProperty()->m_noDataValue );
             }
           }
           else
@@ -320,7 +315,7 @@ namespace teradar {
           }
 
           for( unsigned int inputRasterBandsIdx = 0; inputRasterBandsIdx <
-            m_inputParameters.m_inputRasterBands.size( ); ++inputRasterBandsIdx )
+            m_inputParameters.m_inputRasterBands.size(); ++inputRasterBandsIdx )
           {
             const te::rst::Band& band =
               *(cachedRasterPtr->getBand(
@@ -360,7 +355,7 @@ namespace teradar {
           }
           else
           {
-            maxSegThreads = te::common::GetPhysProcNumber( );
+            maxSegThreads = te::common::GetPhysProcNumber();
             if( maxSegThreads == 1 )
             {
               maxSegThreads = 0;
@@ -377,24 +372,9 @@ namespace teradar {
         unsigned int blocksHOverlapSize = 0;
         unsigned int blocksVOverlapSize = 0;
 
-        if( m_inputParameters.m_enableBlockProcessing
-          &&
-          (
-          (maxSegThreads > 0)
-          ||
-          (maxSimultaneousMemoryPixels < ((double)totalRasterPixels))
-          ||
-          (
-          (m_inputParameters.m_maxBlockSize > 0)
-          &&
-          (
-          (m_inputParameters.m_maxBlockSize * m_inputParameters.m_maxBlockSize)
-          <
-          totalRasterPixels
-          )
-          )
-          )
-          )
+        if( m_inputParameters.m_enableBlockProcessing &&
+          (( maxSegThreads > 0 ) || ( maxSimultaneousMemoryPixels < ((double)totalRasterPixels) )
+          || (( m_inputParameters.m_maxBlockSize > 0) && (( m_inputParameters.m_maxBlockSize * m_inputParameters.m_maxBlockSize ) < totalRasterPixels ))))
         {
           // Calculating max bock pixels using the avaliable resources or
           // the user given parameters
@@ -425,22 +405,20 @@ namespace teradar {
             maxExpandedBlockWidth,
             maxExpandedBlockHeight ),
             "Error calculating best block size" );
-        }
-        else
-        {
+        } else {
           maxNonExpandedBlockWidth = maxExpandedBlockWidth =
-            cachedRasterPtr->getNumberOfColumns( );
+            cachedRasterPtr->getNumberOfColumns();
           maxNonExpandedBlockHeight = maxExpandedBlockHeight =
-            cachedRasterPtr->getNumberOfRows( );
+            cachedRasterPtr->getNumberOfRows();
         }
 
         // Defining number of blocks
 
         const unsigned int hBlocksNumber = (unsigned int)ceil(
-          ((double)cachedRasterPtr->getNumberOfColumns( )) /
+          ((double)cachedRasterPtr->getNumberOfColumns()) /
           ((double)maxNonExpandedBlockWidth) );
         const unsigned int vBlocksNumber = (unsigned int)ceil(
-          ((double)cachedRasterPtr->getNumberOfRows( )) /
+          ((double)cachedRasterPtr->getNumberOfRows()) /
           ((double)maxNonExpandedBlockHeight) );
 
         // Generating cut off profiles. When possible, an empty profile
@@ -451,7 +429,7 @@ namespace teradar {
 
         if( m_inputParameters.m_enableBlockProcessing &&
           (m_inputParameters.m_blocksOverlapPercent > 0) &&
-          (strategyPtr->getBlocksMergingMethod( ) == te::rp::SegmenterStrategy::GradientMerging) )
+          (strategyPtr->getBlocksMergingMethod() == te::rp::SegmenterStrategy::GradientMerging) )
         {
           //          std::cout << std::endl << "Starting CutOff profiles generation" << std::endl;
 
@@ -467,11 +445,11 @@ namespace teradar {
           for( profileIdx = 1; profileIdx < hBlocksNumber;
             ++profileIdx )
           {
-            profile.clear( );
+            profile.clear();
 
             const unsigned int centerLine = std::min(
               (profileIdx * maxNonExpandedBlockHeight) - 1,
-              cachedRasterPtr->getNumberOfRows( ) - 1 );
+              cachedRasterPtr->getNumberOfRows() - 1 );
 
             TERP_TRUE_OR_RETURN_FALSE( genImageHCutOffProfile( centerLine,
               *(cachedRasterPtr), m_inputParameters.m_inputRasterBands,
@@ -486,11 +464,11 @@ namespace teradar {
           for( profileIdx = 1; profileIdx < vBlocksNumber;
             ++profileIdx )
           {
-            profile.clear( );
+            profile.clear();
 
             const unsigned int centerLine = std::min(
               (profileIdx * maxNonExpandedBlockWidth) - 1,
-              cachedRasterPtr->getNumberOfColumns( ) - 1 );
+              cachedRasterPtr->getNumberOfColumns() - 1 );
 
             TERP_TRUE_OR_RETURN_FALSE( genImageVCutOffProfile( centerLine,
               *(cachedRasterPtr), m_inputParameters.m_inputRasterBands,
@@ -502,10 +480,10 @@ namespace teradar {
             imageVerticalProfilesCenterLines.push_back( centerLine );
           }
 
-          /*          TERP_TRUE_OR_THROW( createCutOffLinesTiff( imageHorizontalProfiles,
-          imageHorizontalProfilesCenterLines,
-          imageVerticalProfiles, imageVerticalProfilesCenterLines,
-          "cutoflines.tif" ), "internal error" )   */
+          // TERP_TRUE_OR_THROW( createCutOffLinesTiff( imageHorizontalProfiles,
+          // imageHorizontalProfilesCenterLines,
+          // imageVerticalProfiles, imageVerticalProfilesCenterLines,
+          // "cutoflines.tif" ), "internal error" )
 
 
           //          std::cout << std::endl << "CutOff profiles generated" << std::endl;
@@ -519,11 +497,11 @@ namespace teradar {
         {
           TERP_TRUE_OR_RETURN_FALSE( segmentsblocksMatrix.reset( vBlocksNumber,
             hBlocksNumber ), "Blocks matrix reset error" );
-
+          
           const int linesBound = (int)
-            cachedRasterPtr->getNumberOfRows( );
+            cachedRasterPtr->getNumberOfRows();
           const int colsBound = (int)
-            cachedRasterPtr->getNumberOfColumns( );
+            cachedRasterPtr->getNumberOfColumns();
           int expandedBlockXBound = 0;
           int expandedBlockYBound = 0;
           int blockXStart = 0;
@@ -532,10 +510,10 @@ namespace teradar {
           int expandedBlockYStart = 0;
 
           for( unsigned int segmentsMatrixLine = 0; segmentsMatrixLine <
-            segmentsblocksMatrix.getLinesNumber( ); ++segmentsMatrixLine )
+            segmentsblocksMatrix.getLinesNumber(); ++segmentsMatrixLine )
           {
             for( unsigned int segmentsMatrixCol = 0; segmentsMatrixCol <
-              segmentsblocksMatrix.getColumnsNumber( ); ++segmentsMatrixCol )
+              segmentsblocksMatrix.getColumnsNumber(); ++segmentsMatrixCol )
             {
               blockXStart = (int)(segmentsMatrixCol * maxNonExpandedBlockWidth);
               blockYStart = (int)(segmentsMatrixLine * maxNonExpandedBlockHeight);
@@ -588,7 +566,7 @@ namespace teradar {
         // Disabling de raster cache
         // since it will be not used during segmentation
 
-        cachedRasterHandler.reset( );
+        cachedRasterHandler.reset();
         cachedRasterPtr = 0;
 
         // The progress interface
@@ -602,11 +580,10 @@ namespace teradar {
           progressPtr.reset( new te::common::TaskProgress );
           progressPtr->setTotalSteps( 1 + (vBlocksNumber * hBlocksNumber) );
           progressPtr->setMessage( "Segmentation" );
-          progressPtr->pulse( );
+          progressPtr->pulse();
         }
 
         // Starting the segmentation 
-
         boost::mutex generalMutex;
         boost::mutex blockProcessedSignalMutex;
 
@@ -644,15 +621,15 @@ namespace teradar {
         baseSegThreadParams.m_inputRasterBandMaxValues = inputRasterBandMaxValues;
         baseSegThreadParams.m_enableStrategyProgress = enableStrategyProgress;
 
-        if( m_inputParameters.m_inputRasterNoDataValues.empty( ) )
+        if( m_inputParameters.m_inputRasterNoDataValues.empty() )
         {
           for( unsigned int inputRasterBandsIdx = 0; inputRasterBandsIdx <
-            m_inputParameters.m_inputRasterBands.size( ); ++inputRasterBandsIdx )
+            m_inputParameters.m_inputRasterBands.size(); ++inputRasterBandsIdx )
           {
             baseSegThreadParams.m_inputRasterNoDataValues.push_back(
               m_inputParameters.m_inputRasterPtr->getBand(
               m_inputParameters.m_inputRasterBands[
-                inputRasterBandsIdx] )->getProperty( )->m_noDataValue );
+                inputRasterBandsIdx] )->getProperty()->m_noDataValue );
           }
         }
         else
@@ -664,7 +641,7 @@ namespace teradar {
         {
           int bandBlockSizeBytes =
             m_inputParameters.m_inputRasterPtr->getBand(
-            m_inputParameters.m_inputRasterBands[0] )->getBlockSize( );
+            m_inputParameters.m_inputRasterBands[0] )->getBlockSize();
           double maxSimultaneousCacheBlocks = (0.05 * freeVMem) / ((double)bandBlockSizeBytes);
 
           if( maxSegThreads )
@@ -714,14 +691,14 @@ namespace teradar {
 
             //            std::cout << std::endl << "Woke up" << std::endl;
 
-            if( progressPtr.get( ) )
+            if( progressPtr.get() )
             {
               int segmentedBlocksNmb = 0;
               for( unsigned int segmentsMatrixLine = 0; segmentsMatrixLine <
-                segmentsblocksMatrix.getLinesNumber( ); ++segmentsMatrixLine )
+                segmentsblocksMatrix.getLinesNumber(); ++segmentsMatrixLine )
               {
                 for( unsigned int segmentsMatrixCol = 0; segmentsMatrixCol <
-                  segmentsblocksMatrix.getColumnsNumber( ); ++segmentsMatrixCol )
+                  segmentsblocksMatrix.getColumnsNumber(); ++segmentsMatrixCol )
                 {
                   if( segmentsblocksMatrix[segmentsMatrixLine][segmentsMatrixCol].m_status
                     == te::rp::SegmenterSegmentsBlock::BlockSegmented )
@@ -733,11 +710,11 @@ namespace teradar {
 
               if( segmentedBlocksNmb != prevSegmentedBlocksNmb )
               {
-                progressPtr->pulse( );
+                progressPtr->pulse();
                 prevSegmentedBlocksNmb = segmentedBlocksNmb;
               }
 
-              if( !progressPtr->isActive( ) )
+              if( !progressPtr->isActive() )
               {
                 abortSegmentationFlag = true;
               }
@@ -748,7 +725,7 @@ namespace teradar {
 
           // joining all threads
 
-          threads.join_all( );
+          threads.join_all();
           /*
           globalMutex.lock();
           std::cout << std::endl << "Threads joined." << std::endl;
@@ -767,8 +744,6 @@ namespace teradar {
       {
         return false;
       }
-      //////////////////////////////////////
-      
     }
 
     void MultiLevelSegmenter::reset() throw(te::rp::Exception)

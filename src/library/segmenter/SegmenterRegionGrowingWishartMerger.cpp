@@ -34,9 +34,9 @@ namespace teradar {
     }
 
     te::rp::DissimilarityTypeT
-      SegmenterRegionGrowingWishartMerger::getDissimilarity( te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const segment1Ptr,
-      te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const segment2Ptr,
-      te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > * const mergePreviewSegPtr ) const
+      SegmenterRegionGrowingWishartMerger::getDissimilarity( te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > const * const segment1Ptr,
+      te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > const * const segment2Ptr,
+      te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > * const mergePreviewSegPtr ) const
     {
       assert( segment1Ptr );
       assert( segment1Ptr->m_features );
@@ -63,8 +63,8 @@ namespace teradar {
       // fill the covariance matrix
       unsigned int covMatrixOrder = (unsigned int)std::sqrt( m_featuresNumber );
 
-      boost::numeric::ublas::matrix< te::rp::rg::WishartFeatureType > segment1Matrix( covMatrixOrder, covMatrixOrder );
-      boost::numeric::ublas::matrix< te::rp::rg::WishartFeatureType > segment2Matrix( covMatrixOrder, covMatrixOrder );
+      boost::numeric::ublas::matrix< WishartFeatureType > segment1Matrix( covMatrixOrder, covMatrixOrder );
+      boost::numeric::ublas::matrix< WishartFeatureType > segment2Matrix( covMatrixOrder, covMatrixOrder );
 
       for( m_getDissimilarity_elemXIdx = 0; m_getDissimilarity_elemXIdx < covMatrixOrder; ++m_getDissimilarity_elemXIdx ) {
         for( m_getDissimilarity_elemYIdx = 0; m_getDissimilarity_elemYIdx < covMatrixOrder; ++m_getDissimilarity_elemYIdx ) {
@@ -74,8 +74,8 @@ namespace teradar {
       }
 
       // Compute the union values.
-      boost::numeric::ublas::matrix< te::rp::rg::WishartFeatureType > segmentUMatrix( covMatrixOrder, covMatrixOrder );
-      boost::numeric::ublas::matrix< te::rp::rg::WishartFeatureType > segmentPUMatrix( covMatrixOrder, covMatrixOrder );
+      boost::numeric::ublas::matrix< WishartFeatureType > segmentUMatrix( covMatrixOrder, covMatrixOrder );
+      boost::numeric::ublas::matrix< WishartFeatureType > segmentPUMatrix( covMatrixOrder, covMatrixOrder );
 
       segmentPUMatrix = (segment1Matrix * m_getDissimilarity_sizeSeg1D) + (segment2Matrix * m_getDissimilarity_sizeSeg2D);
       segmentPUMatrix /= m_getDissimilarity_sizeUnionD;
@@ -91,8 +91,8 @@ namespace teradar {
         }
       }
 
-      te::rp::rg::WishartFeatureType seg1Det = 0.;
-      te::common::GetDeterminant< te::rp::rg::WishartFeatureType >( segment1Matrix, seg1Det );
+      WishartFeatureType seg1Det = 0.;
+      te::common::GetDeterminant< WishartFeatureType >( segment1Matrix, seg1Det );
 
       if( std::real( seg1Det ) == 0 ) {
         do {
@@ -103,13 +103,13 @@ namespace teradar {
             }
           }
 
-          te::common::GetDeterminant< te::rp::rg::WishartFeatureType >( segment1Matrix, seg1Det );
+          te::common::GetDeterminant< WishartFeatureType >( segment1Matrix, seg1Det );
 
         } while( std::real( seg1Det ) == 0 );
       }
 
-      te::rp::rg::WishartFeatureType seg2Det = 0.;
-      te::common::GetDeterminant< te::rp::rg::WishartFeatureType >( segment2Matrix, seg2Det );
+      WishartFeatureType seg2Det = 0.;
+      te::common::GetDeterminant< WishartFeatureType >( segment2Matrix, seg2Det );
 
       if( std::real( seg2Det ) == 0 ) {
         do {
@@ -120,13 +120,13 @@ namespace teradar {
             }
           }
 
-          te::common::GetDeterminant< te::rp::rg::WishartFeatureType >( segment2Matrix, seg2Det );
+          te::common::GetDeterminant< WishartFeatureType >( segment2Matrix, seg2Det );
 
         } while( std::real( seg2Det ) == 0 );
       }
 
-      te::rp::rg::WishartFeatureType segUDet = 0.;
-      te::common::GetDeterminant< te::rp::rg::WishartFeatureType >( segmentUMatrix, segUDet );
+      WishartFeatureType segUDet = 0.;
+      te::common::GetDeterminant< WishartFeatureType >( segmentUMatrix, segUDet );
 
       if( std::real( segUDet ) == 0 ) {
         do {
@@ -137,7 +137,7 @@ namespace teradar {
             }
           }
 
-          te::common::GetDeterminant< te::rp::rg::WishartFeatureType >( segmentUMatrix, segUDet );
+          te::common::GetDeterminant< WishartFeatureType >( segmentUMatrix, segUDet );
 
         } while( std::real( segUDet ) == 0 );
       }
@@ -176,9 +176,9 @@ namespace teradar {
       return m_getDissimilarity_dissValue;
     }
 
-    void SegmenterRegionGrowingWishartMerger::mergeFeatures( te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > * const segment1Ptr,
-      te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const segment2Ptr,
-      te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const mergePreviewSegPtr ) const
+    void SegmenterRegionGrowingWishartMerger::mergeFeatures( te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > * const segment1Ptr,
+      te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > const * const segment2Ptr,
+      te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > const * const mergePreviewSegPtr ) const
     {
       assert( segment1Ptr );
       assert( segment1Ptr->m_features );
@@ -195,10 +195,10 @@ namespace teradar {
 
       // Merging specific features   
       memcpy( segment1Ptr->m_features, mergePreviewSegPtr->m_features,
-        sizeof(te::rp::rg::WishartFeatureType) * getSegmentFeaturesSize() );
+        sizeof(WishartFeatureType) * getSegmentFeaturesSize() );
     }
 
-    void SegmenterRegionGrowingWishartMerger::update( te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* const actSegsListHeadPtr )
+    void SegmenterRegionGrowingWishartMerger::update( te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* const actSegsListHeadPtr )
     {
     }
 

@@ -193,11 +193,3 @@ TEST( RadarFunctions, computeMinCompLevelENL )
   EXPECT_EQ( p2.first, 3 );
   EXPECT_EQ( p2.second, 7.65 );
 }
-
-// @todo - etore - fix it when the problem with SRS was fixed in TerraLib
-TEST( EndMethods, finalizeTerralib )
-{
-  te::plugin::PluginManager::getInstance().shutdownAll();
-  te::plugin::PluginManager::getInstance().unloadAll();
-  TerraLib::getInstance().finalize();
-}

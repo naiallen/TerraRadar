@@ -33,6 +33,7 @@ set(TERRARADAR_SEGM_LIB_DEPENDENCIES #terraradar_mod_segmenter
                                  ${TERRALIB_COMMON_LIBRARY}
                                  ${TERRALIB_RP_LIBRARY}
 								 ${TERRALIB_MEMORY_LIBRARY}
+								 ${TERRALIB_PLUGIN_LIBRARY}
 )
 
 add_library(terraradar_mod_segmenter SHARED ${TERRARADAR_SEGM_SRCS} ${TERRARADAR_SEGM_HDRS})

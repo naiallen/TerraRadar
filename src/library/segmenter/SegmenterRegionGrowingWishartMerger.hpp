@@ -20,14 +20,18 @@ TerraRadar is under development.
 #include <terralib/rp/SegmenterRegionGrowingFunctions.h>
 #include <terralib/rp/SegmenterRegionGrowingMerger.h>
 
+#include <complex>
+
 namespace teradar {
   namespace segmenter {
+    typedef std::complex<double> WishartFeatureType;
+
     /*!
       \class SegmenterRegionGrowingWishartMerger
       \brief Segments merger based on Wishart method.
       */
     class TERADARSEGMEXPORT SegmenterRegionGrowingWishartMerger : 
-      public te::rp::SegmenterRegionGrowingMerger < te::rp::rg::WishartFeatureType >
+      public te::rp::SegmenterRegionGrowingMerger< WishartFeatureType >
     {
       public:
         /*!
@@ -45,17 +49,17 @@ namespace teradar {
 
         //overload        
         te::rp::DissimilarityTypeT
-          getDissimilarity( te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const segment1Ptr,
-          te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const segment2Ptr,
-          te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > * const mergePreviewSegPtr ) const;
+          getDissimilarity( te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > const * const segment1Ptr,
+          te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > const * const segment2Ptr,
+          te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > * const mergePreviewSegPtr ) const;
 
         //overload                
-        void mergeFeatures( te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > * const segment1Ptr,
-          te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const segment2Ptr,
-          te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType > const * const mergePreviewSegPtr ) const;
+        void mergeFeatures( te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > * const segment1Ptr,
+          te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > const * const segment2Ptr,
+          te::rp::SegmenterRegionGrowingSegment< WishartFeatureType > const * const mergePreviewSegPtr ) const;
 
         //overload
-        void update( te::rp::SegmenterRegionGrowingSegment< te::rp::rg::WishartFeatureType >* const actSegsListHeadPtr );
+        void update( te::rp::SegmenterRegionGrowingSegment< WishartFeatureType >* const actSegsListHeadPtr );
 
         //overload
         inline unsigned int getSegmentFeaturesSize() const {
