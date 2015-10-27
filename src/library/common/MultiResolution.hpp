@@ -83,6 +83,15 @@ namespace teradar {
         */
         void remove();
 
+        /*!
+          \brief Given a level, returns the number of lines and columns associated to it.
+          \param level MultiResolution level.
+          \param lines Number of lines from given level.
+          \param cols Number of columns from given level.
+          \return True if lines and columns were taken without errors. False otherwise.
+        */
+        bool getNumberOfLinesAndColumns( size_t level, size_t& lines, size_t& cols ) const;
+
       protected:
         /*!
           \brief Create the multi resolution levels.

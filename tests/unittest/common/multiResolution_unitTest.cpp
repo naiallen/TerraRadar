@@ -132,6 +132,23 @@ TEST( MultiResolution, removeTest )
   size_t levels = multiRes->getNumberOfLevels();
   EXPECT_EQ( levels, 3 );
 
+  size_t m_rows;
+  size_t m_cols;
+
+  EXPECT_TRUE( multiRes->getNumberOfLinesAndColumns( 0, m_rows, m_cols ) );
+  EXPECT_EQ( 240, m_rows );
+  EXPECT_EQ( 240, m_cols );
+
+  EXPECT_TRUE( multiRes->getNumberOfLinesAndColumns( 1, m_rows, m_cols ) );
+  EXPECT_EQ( 120, m_rows );
+  EXPECT_EQ( 120, m_cols );
+
+  EXPECT_TRUE( multiRes->getNumberOfLinesAndColumns( 2, m_rows, m_cols ) );
+  EXPECT_EQ( 60, m_rows );
+  EXPECT_EQ( 60, m_cols );
+
+  EXPECT_FALSE( multiRes->getNumberOfLinesAndColumns( 3, m_rows, m_cols ) );
+  
   multiRes->remove();
   EXPECT_TRUE( inputRaster != NULL );
 

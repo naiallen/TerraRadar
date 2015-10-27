@@ -200,5 +200,17 @@ namespace teradar {
         }
       }
     }
+
+    bool MultiResolution::getNumberOfLinesAndColumns( size_t level, size_t& lines, size_t& cols ) const
+    {
+      if( level >= m_levels.size() ) {
+        return false;
+      }
+     
+      lines = m_levels[level]->getNumberOfRows();
+      cols = m_levels[level]->getNumberOfColumns();
+      
+      return true;
+    }
   } // end namespace common
 } // end namespace teradar
