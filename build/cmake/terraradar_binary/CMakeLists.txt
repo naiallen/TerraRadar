@@ -46,7 +46,7 @@ add_executable(terraradar ${TERRARADAR_EXEC_HDRS} ${TERRARADAR_EXEC_SRCS})
 
 target_link_libraries(terraradar ${TERRARADAR_EXEC_DEPENDENCIES} 
 	                             ${TERRARADAR_EXEC_QT_DEPENDENCIES}
-	                             ${TERRADADAR_EXEC_LIB_DEPENDENCIES}
+	                             ${TERRARADAR_EXEC_LIB_DEPENDENCIES}
 	                             ${QT_LIBRARIES})
 
 if(TERRARADAR_SOURCE_VERIFY_ENABLED)
