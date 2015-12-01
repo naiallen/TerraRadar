@@ -6,8 +6,8 @@
 
 # Includes
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${TERRALIB_INCLUDE_DIR})
-include_directories(${TERRALIB_INCLUDE_CONFIG_DIR})
+include_directories(${terralib_INCLUDE_DIRS})
+include_directories(${terralib_DIR})
 
 #Set include directories location
 include_directories(${TERRARADAR_SRC_DIR}/library/segmenter)
@@ -27,13 +27,13 @@ source_group("Header Files"  FILES ${TERRARADAR_SEGM_HDRS})
 # Setting Dependencies
 set(TERRARADAR_SEGM_LIB_DEPENDENCIES #terraradar_mod_segmenter
                                  ${Boost_SYSTEM_LIBRARY}
-								 ${Boost_THREAD_LIBRARY}
-								 ${Boost_FILESYSTEM_LIBRARY}
-                                 ${TERRALIB_RASTER_LIBRARY}
-                                 ${TERRALIB_COMMON_LIBRARY}
-                                 ${TERRALIB_RP_LIBRARY}
-								 ${TERRALIB_MEMORY_LIBRARY}
-								 ${TERRALIB_PLUGIN_LIBRARY}
+								                 ${Boost_THREAD_LIBRARY}
+								                 ${Boost_FILESYSTEM_LIBRARY}
+                                 terralib_mod_common
+                                 terralib_mod_rp
+                                 terralib_mod_raster
+                                 terralib_mod_memory
+                                 terralib_mod_plugin
 )
 
 add_library(terraradar_mod_segmenter SHARED ${TERRARADAR_SEGM_SRCS} ${TERRARADAR_SEGM_HDRS})

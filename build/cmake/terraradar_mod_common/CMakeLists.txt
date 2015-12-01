@@ -6,8 +6,8 @@
 
 # Includes
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${TERRALIB_INCLUDE_DIR})
-include_directories(${TERRALIB_INCLUDE_CONFIG_DIR})
+include_directories(${terralib_INCLUDE_DIRS})
+include_directories(${terralib_DIR})
 
 #Set include directories location
 include_directories(${TERRARADAR_SRC_DIR}/library/common)
@@ -26,11 +26,11 @@ source_group("Header Files"  FILES ${TERRARADAR_COMMON_HDRS})
 
 # Setting Dependencies
 set(TERRARADAR_COMMON_LIB_DEPENDENCIES ${Boost_SYSTEM_LIBRARY}
-									   ${Boost_FILESYSTEM_LIBRARY}
-                                       ${TERRALIB_COMMON_LIBRARY}
-                                       ${TERRALIB_PLUGIN_LIBRARY}
-                                       ${TERRALIB_RP_LIBRARY}
-                                       ${TERRALIB_RASTER_LIBRARY}
+									                     ${Boost_FILESYSTEM_LIBRARY}
+                                       terralib_mod_common
+                                       terralib_mod_plugin
+                                       terralib_mod_rp
+                                       terralib_mod_raster
 )
 
 add_library(terraradar_mod_common SHARED ${TERRARADAR_COMMON_SRCS} ${TERRARADAR_COMMON_HDRS})

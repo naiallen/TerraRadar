@@ -1,0 +1,74 @@
+  TerraRadar Build Instructions
+  ===========================
+
+  The build/cmake folder contains a CMake project for building TerraLib.
+
+  Until now its build has been tested on Microsoft Windows 8.
+
+
+2. Building with CMake GUI on Windows using MSVC2013
+--------------------------
+
+a) We will assume that the TerraLib source tree (git clone) is located at:
+   C:\terralib\codebase
+
+b) We will assume that the TerraRadar source tree (git clone) is located at:
+
+   C:\terraradar\codebase
+ 
+ and the build library is located at:
+ 
+   C:\terralib\build-win64
+  or
+    C:\terralib\build-win32   
+
+c) As TerraLib is a dependency, TerraRadar uses its third party libraries for Visual Studio 2013, and they can be obtained from two places:
+   b.1) The tagged version:  
+     http://www.dpi.inpe.br/terralib5/terralib5-3rdparty/terralib5.0.1-3rdparty-msvc-2013-win64.zip
+           or
+     http://www.dpi.inpe.br/terralib5/terralib5-3rdparty/terralib5.0.1-3rdparty-msvc-2013-win32.zip
+		   
+   b.2) The most updated version used by developers (might not work with different tags): 
+     http://www.dpi.inpe.br/terralib5-devel/terralib5-3rdparty-msvc-2013-win64.zip
+           or
+     http://www.dpi.inpe.br/terralib5-devel/terralib5-3rdparty-msvc-2013-win32.zip
+   
+are uncompressed at:
+   
+   C:\terralib\terralib5-3rdparty-msvc-2013-win64
+   or
+   C:\terralib\terralib5-3rdparty-msvc-2013-win32
+
+d) Create a folder out of the TerraRadar source tree to build the binaries, for example:
+   C:\terralib\build-win64
+ or
+   C:\terralib\build-win32
+
+e) Open CMake-GUI in order to generate a build project for Microsoft Visual C++ 2013 (32-bit or 64-bit).
+
+f) Then assure that the following variables are set to the locations defined above:
+   Where is the source code    => C:\terraradar\codebase\build\cmake
+   Where to build the binaries => C:\terraradar\build-win64
+                                  or
+                                  C:\terraradar\build-win32
+
+g) Then add an entry called CMAKE_PREFIX_PATH with the libraries location (separated by semicolons):
+
+  * TerraLib 5 Third party => C:/terralib/terralib5-3rdparty-msvc-2013-win64
+  * Qt CMake => look for the Qt dir containing ''Qt5Config.cmake''
+
+Example for win64: Press ''AddEntry'' button and inform the name ''CMAKE_PREFIX_PATH'', type ''PATH'' and set its value as:   
+   CMAKE_PREFIX_PATH => C:/terralib/3rdparty-win64-qt5;C:/Qt/Qt5.4.1/5.4/msvc2013_64_opengl/lib/cmake
+ 
+h) Add another entry called GTEST_ROOT and point to the place where Google Test has been installed.
+
+i) Then press "''Configure''" and choose:
+  * "''Visual Studio 12 x64''" (win64) or "''Visual Studio 12''" (win32) and 
+  * if no problem occurs press "''Generate''". Otherwise update your environment variable "PATH" with the right location of Qt and third party library (see item "j").
+
+Note: Some projects may be disabled through the following variables(in this case press again "Configure" and "Generate"):
+        TERRALIB_BUILD_EXAMPLES_ENABLED => OFF
+        TERRALIB_BUILD_UNITTEST_ENABLED => OFF
+
+j) Open the generated ''terraradar.sln'' solution at the folder ''C:\terraradar\build-win64'' or ''C:\terraradar\build-win32''. Then build the "''ALL_BUILD''" project to build all modules.
+   

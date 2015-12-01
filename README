@@ -34,4 +34,4 @@ share		Shared resources.
                
 src         Contains the source code of TerraRadar.
 
-unittest    Contains some code to test the features.
+tests       Contains some code to test the features.

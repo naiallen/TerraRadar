@@ -6,8 +6,8 @@
 
 # Includes
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${TERRALIB_INCLUDE_DIR})
-include_directories(${TERRALIB_INCLUDE_CONFIG_DIR})
+include_directories(${terralib_DIR})
+include_directories(${terralib_INCLUDE_DIRS})
 
 #Set include directories location
 include_directories(${TERRARADAR_SRC_DIR}/library/filter)
