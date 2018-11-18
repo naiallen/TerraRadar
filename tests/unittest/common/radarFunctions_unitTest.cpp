@@ -10,6 +10,7 @@ TerraRadar is under development.
 \brief A test suite for the functions that handles Radar data.
 */
 
+#include "stdlib.h"
 // TerraRadar includes
 #include "BuildConfig.hpp"
 #include "Functions.hpp"
@@ -18,46 +19,105 @@ TerraRadar is under development.
 
 // TerraLib includes
 #include <terralib/common/TerraLib.h>
+#include <terralib/rp/Functions.h>
 #include <terralib/plugin.h>
 
 // Gtest includes
 #include <gtest/gtest.h>
 
 
-TEST( RadarFunctions, createCovarianceTest1 )
+/*TEST( RadarFunctions, createCovarianceTest1 )
 {
-  // open the input raster
-  std::map<std::string, std::string> inputRasterInfo;
-  inputRasterInfo["URI"] = TERRARADAR_DATA_DIR "/rasters/ref_ImagPol240_0.bin";
-  te::rst::Raster* inputRaster( te::rst::RasterFactory::open( inputRasterInfo ) );
-  EXPECT_TRUE( inputRaster != NULL );
+	// open the input raster
+	std::map<std::string, std::string> inputRasterInfo;
+	inputRasterInfo["URI"] = "C:/Users/Diego/Desktop/ima/ALOS_FINAL_PREENCHIDA.tif";
+	te::rst::Raster* inputRaster( te::rst::RasterFactory::open( inputRasterInfo ) );
+	EXPECT_TRUE( inputRaster != NULL );
 
-  // create input data (bands and rasters)
-  std::vector<unsigned int> inputBands;
-  std::vector<te::rst::Raster*> inputRasters;
+	std::size_t nBands = inputRaster->getNumberOfBands();
+	// create input data (bands and rasters)
+	std::vector<unsigned int> inputBands;
+	std::vector<te::rst::Raster*> inputRasters;
 
-  for( unsigned int i = 0; i < 3; ++i ) {
-    inputBands.push_back( i );
-    inputRasters.push_back( inputRaster );
-  }
+	for (unsigned int i = 0; i < nBands; ++i) {
+		inputBands.push_back( i );
+		inputRasters.push_back( inputRaster );
+	}
 
-  // call CreateCovarianceRaster and check the return value.
-  std::auto_ptr<te::rst::Raster> covMatrixRaster;
-  std::map<std::string, std::string> covRasterInfo;
+	// call CreateCovarianceRaster and check the return value.
+	std::auto_ptr<te::rst::Raster> covMatrixRaster;
+	std::map<std::string, std::string> covRasterInfo;
 
-  bool covResult = teradar::common::CreateCovarianceRaster( inputRasters, inputBands, covRasterInfo, "MEM", covMatrixRaster );
-  EXPECT_TRUE( covResult );
+	bool covResult = teradar::common::CreateCovarianceRaster( inputRasters, inputBands, covRasterInfo, "MEM", covMatrixRaster);
+	
+	teradar::common::CopyComplex2DiskRaster(*covMatrixRaster, "C:/Users/Diego/Desktop/ima/covariancia.tif"); // save the created file
 
-  // save the created file
-  teradar::common::CopyComplex2DiskRaster( *covMatrixRaster, "test_ImagPol240_0_cov.tif" );
+	delete inputRaster; // Free memory
+}*/
 
-  // @todo - etore - check if the image has been generated correctly.
 
-  // Free memory
-  delete inputRaster;
-}
+/*TEST(RadarFunctions, createCoherenceTest1)
+{
+	std::map<std::string, std::string> inputRasterInfo;
+	inputRasterInfo["URI"] = "C:/Users/Diego/Desktop/ima/ref_ImagPol240_0.bin";
+	te::rst::Raster* inputRaster(te::rst::RasterFactory::open(inputRasterInfo));
 
-TEST( RadarFunctions, createIntensityTest1 )
+	EXPECT_TRUE(inputRaster != NULL);
+	std::size_t nBands = inputRaster->getNumberOfBands();
+
+	// create input data(bands and rasters)
+	std::vector<unsigned int> inputBands;
+	std::vector<te::rst::Raster*> inputRasters;
+
+	//get the number of bands
+	for (unsigned int i = 0; i < nBands; ++i) {
+		inputBands.push_back(i);
+		inputRasters.push_back(inputRaster);
+	}
+
+	// call CreateCovarianceRaster and check the return value.
+	std::auto_ptr<te::rst::Raster> cohMatrixRaster;
+	std::map<std::string, std::string> cohRasterInfo;
+
+	bool cohResult = teradar::common::CreateCoherenceRaster(inputRasters, inputBands, cohRasterInfo, "MEM", cohMatrixRaster);
+	EXPECT_TRUE(cohResult);
+
+	teradar::common::CopyComplex2DiskRaster(*cohMatrixRaster, "C:/Users/Diego/Desktop/ima/coerencia1.tif"); // save the created file
+
+	delete inputRaster;  // Free memory
+}*/
+
+
+/*TEST(RadarFunctions, C2T)
+{
+	// open the input raster
+	std::map<std::string, std::string> inputRasterInfo;
+	inputRasterInfo["URI"] = "C:/Users/Diego/Desktop/ima/covariancia.tif"; 
+	te::rst::Raster* inputRaster(te::rst::RasterFactory::open(inputRasterInfo));
+	EXPECT_TRUE(inputRaster != NULL);
+
+
+	std::size_t nBands = inputRaster->getNumberOfBands();
+	// create input data (bands and rasters)
+	std::vector<unsigned int> inputBands;
+	std::vector<te::rst::Raster*> inputRasters;
+
+	for (unsigned int i = 0; i < nBands; ++i) {
+		inputBands.push_back(i);
+		inputRasters.push_back(inputRaster);
+	}
+
+	std::auto_ptr<te::rst::Raster> MatrixRaster;
+	std::map<std::string, std::string> RasterInfo;
+
+	bool Result = teradar::common::ChangeCohtoCov(inputRasters, inputBands, 1, RasterInfo, "MEM", MatrixRaster);
+
+	teradar::common::CopyComplex2DiskRaster(*MatrixRaster, "C:/Users/Diego/Desktop/ima/coerenciaBoost.tif"); // save the created file
+	
+	delete inputRaster; // Free memory
+}*/
+
+/*TEST( RadarFunctions, createIntensityTest1 )
 {
   // open the input raster
   std::map<std::string, std::string> inputRasterInfo;
@@ -193,3 +253,4 @@ TEST( RadarFunctions, computeMinCompLevelENL )
   EXPECT_EQ( p2.first, 3 );
   EXPECT_EQ( p2.second, 7.65 );
 }
+*/

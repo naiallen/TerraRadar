@@ -9,7 +9,7 @@ TerraRadar is under development.
 \file terraradar/tests/unittest/common/radarFunctions_unitTest.cpp
 \brief A test suite for the functions that handles Radar data.
 */
-
+#include "stdlib.h"
 // TerraRadar includes
 #include "MultiLevelSegmenter.hpp"
 #include "SegmenterRegionGrowingWishartMerger.hpp"
@@ -29,7 +29,7 @@ TerraRadar is under development.
 // Gtest includes
 #include <gtest/gtest.h>
 
-TEST( MultiLevelSegmenter, xxxTest )
+/*TEST( MultiLevelSegmenter, xxxTest )
 {
   // Progress interface
   te::common::ConsoleProgressViewer progressViewerInstance;
@@ -101,4 +101,5 @@ TEST( EndMethods, finalizeTerralib )
   te::plugin::PluginManager::getInstance().shutdownAll();
   te::plugin::PluginManager::getInstance().unloadAll();
   TerraLib::getInstance().finalize();
-}
+  system("pause");
+}*/

@@ -84,6 +84,71 @@ namespace teradar {
       std::auto_ptr<te::rst::Raster>& outputRasterPtr,
       const bool enableProgressInterface = false );
 
+	/*NAIALLEN Compute the coherence*/
+	/*!
+	\brief Create a multi-band raster representing the coherence [T] matrix.
+	The number of bands is based on the number of input rasters.
+	If the number of input rasters is 3, the method assumes that the input
+	is a scattering vector, and the rasters contain data for HH, HV(VH) and
+	VV polarizations.
+	In case of size 4, the method assumes that the input data is complete,
+	containing the HH, HV, VH and VV polarizations.
+	If the size is 6, the method assumes that the input is an incomplete covariance
+	matrix which order is 3, and create a complete one.
+	If the size is 10, the method assumes that the input is an incomplete covariance
+	matrix which order is 4, and create a complete one.
+	The method assumes that the bands from rasters have the same dimension.
+	\param inputRasterPointers Input rasters pointers.
+	\param inputRasterBands Input raster bands (one band for each input
+	raster).
+	\param outputRasterInfo Output raster connection info.
+	\param outputDataSourceType Output raster datasource type.
+	\param outputRasterPtr A pointer to the created output raster.
+	\param enableProgressInterface Enable/disable the use of a progress
+	interface when applicable.
+	\return true if OK, false on errors.
+	\note The number of bands in output raster is based on input. For the
+	scattering vector, the output raster will contain 9 bands and, for the
+	complete input (scattering matrix), the output will contain 16 bands.
+	*/
+	TERADARCOMMONEXPORT bool CreateCoherenceRaster(const std::vector<te::rst::Raster*>& CohInputRasterPtrs,
+		const std::vector<unsigned int>& CohInputRasterBands,
+		const std::map<std::string, std::string>& CohOutputRasterInfo,
+		const std::string& CohOutputDataSourceType,
+		std::auto_ptr<te::rst::Raster>& CohOutputRasterPtr,
+		const bool enableProgressInterface = false);
+
+	/*NAIALLEN Compute the conversion
+	0 to convert T to C 
+	1 to convvert C to T*/
+	/*!
+	\brief Create a multi-band raster. Convert a covariance [C] matrix into
+	a coherebce matrix [T] or the contrary.
+	0 to convert T to C
+	1 to convvert C to T	
+	The number of bands is based on the number of input rasters, it can be 9 or 16.
+	The method assumes that the bands from rasters have the same dimension.
+	\param InputRasterPtrs Input rasters pointers.
+	\param InputRasterBands Input raster bands (one band for each input raster).
+	\param  t2c 0 to convert T to C  or 1 to convvert C to T
+	\param outputRasterInfo Output raster connection info.
+	\param outputDataSourceType Output raster datasource type.
+	\param outputRasterPtr A pointer to the created output raster.
+	\param enableProgressInterface Enable/disable the use of a progress
+	interface when applicable.
+	\return true if OK, false on errors.
+	\note The number of bands in output raster is based on input. For the
+	scattering vector, the output raster will contain 9 bands and, for the
+	complete input (scattering matrix), the output will contain 16 bands.
+	*/
+	TERADARCOMMONEXPORT bool ChangeCohtoCov(const std::vector<te::rst::Raster*>& InputRasterPtrs,
+		const std::vector<unsigned int>& InputRasterBands,
+		const int t2c,
+		const std::map<std::string, std::string>& OutputRasterInfo,
+		const std::string& OutputDataSourceType,
+		std::auto_ptr<te::rst::Raster>& OutputRasterPtr,
+		const bool enableProgressInterface = false);
+
     /*!
       \brief Given two rasters and two band numbers, computes covariance and Pearson's correlation between them.
       \param inputRaster1Ptr Pointer to the first raster used in computation.

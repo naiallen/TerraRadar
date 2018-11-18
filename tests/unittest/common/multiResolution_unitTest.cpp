@@ -32,7 +32,7 @@ TEST( InitMethods, loadTerralib )
   teradar::common::loadTerraLibDrivers();
 }
 
-TEST( MultiResolution, basicTests )
+/*TEST( MultiResolution, basicTests )
 {
   // open the input raster
   std::map<std::string, std::string> inputRasterInfo;
@@ -198,5 +198,5 @@ TEST( MultiResolution, computeMaxCompressionLevelTests )
   EXPECT_EQ( teradar::common::MultiResolution::computeMaxCompressionLevel( 4250, 5923 ), 12 );
   EXPECT_EQ( teradar::common::MultiResolution::computeMaxCompressionLevel( 4250, 8 ), 3 );
   EXPECT_EQ( teradar::common::MultiResolution::computeMaxCompressionLevel( 2, 4 ), 1 );
-}
+}*/
 
